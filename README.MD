@@ -1,8 +1,10 @@
-# Crear, compilar y ejecutar proyectos Go en Ubuntu
+# Crear, compilar y ejecutar proyectos Go en Ubuntu y Windows 11
 
-Esta guía explica cómo instalar Go, crear un proyecto, ejecutarlo, compilarlo y realizar las operaciones habituales desde la terminal de Ubuntu.
+Esta guía explica cómo instalar Go en Ubuntu y Windows 11, crear un proyecto, ejecutarlo, compilarlo y realizar las operaciones habituales desde la terminal.
 
 ## 1. Instalar Go
+
+### 1.1. Instalación en Ubuntu
 
 Actualiza la lista de paquetes e instala Go:
 
@@ -24,6 +26,47 @@ go env
 ```
 
 > Para instalar una versión más reciente que la disponible en Ubuntu, consulta la página oficial: <https://go.dev/doc/install>.
+
+### 1.2. Instalación en Windows 11
+
+1. Accede a la página oficial de descargas de Go: <https://go.dev/dl/>.
+2. Descarga el instalador de Windows con extensión `.msi` correspondiente a tu arquitectura. En la mayoría de las computadoras con Windows 11 se utiliza la versión `x86-64` (`amd64`). Los equipos con procesador ARM deben utilizar `ARM64`.
+3. Ejecuta el archivo descargado y sigue los pasos del asistente de instalación.
+4. Mantén la carpeta de instalación predeterminada:
+
+```text
+C:\Program Files\Go
+```
+
+5. Cuando finalice la instalación, cierra las ventanas de PowerShell o Símbolo del sistema que estuvieran abiertas y abre una nueva terminal.
+
+Comprueba desde PowerShell que Go se instaló correctamente:
+
+```powershell
+go version
+```
+
+Consulta la configuración activa:
+
+```powershell
+go env
+```
+
+Para comprobar dónde se encuentra el ejecutable de Go:
+
+```powershell
+Get-Command go
+```
+
+El instalador normalmente agrega automáticamente esta carpeta a la variable de entorno `Path`:
+
+```text
+C:\Program Files\Go\bin
+```
+
+Si PowerShell muestra que `go` no se reconoce como un comando, reinicia la terminal. Si el problema continúa, abre **Configuración avanzada del sistema → Variables de entorno**, edita la variable `Path` y verifica que la carpeta anterior esté incluida.
+
+> Instala Go desde el sitio oficial. No es necesario configurar manualmente `GOROOT` para una instalación estándar.
 
 ## 2. Crear un proyecto nuevo
 
