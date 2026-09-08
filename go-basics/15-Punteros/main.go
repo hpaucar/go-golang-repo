@@ -5,7 +5,7 @@ import "fmt"
 // modificarArreglo recibe un puntero a un slice de enteros y modifica su primer elemento
 func modificarArreglo(arg *[5]int) {
 	(*arg)[0] = 55  // Cambia el primer elemento a 55
-	(*arg)[4] = 333 // Cambia el segundo elemento a 333
+	(*arg)[4] = 333 // Cambia el ultimo elemento a 333
 }
 
 func main() {

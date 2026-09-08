@@ -2,24 +2,25 @@ package main
 
 import "fmt"
 
-// función que devuelve múltiples valores: suma, resta, multiplicación y división
+// función que devuelve múltiples valores: fsuma, fresta, fmultiplicación y fdivisión
 func calcular(a, b float64) (float64, float64, float64, float64) {
-	suma := a + b
-	resta := a - b
-	multiplicacion := a * b
-	var division float64
+	fsuma := a + b
+	fresta := a - b
+	fmultiplicacion := a * b
+	var fdivision float64
 	if b != 0 {
-		division = a / b
+		fdivision = a / b
 	}
 
-	return suma, resta, multiplicacion, division
+	return fsuma, fresta, fmultiplicacion, fdivision
 }
 
 // función que usa un return nombrado para calcular la exponenciación
+// return a^b
 func exponenciar(a, b float64) (resultado float64) {
 	resultado = 1
 	for range int(b) {
-		resultado *= a
+		resultado *= a // resultado = resultado*a
 	}
 	return
 }

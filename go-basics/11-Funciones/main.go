@@ -11,13 +11,13 @@ func sumar(valor1 int, valor2 int) int {
 func sumarVarios(valores ...int) int {
 	suma := 0
 	for _, valor := range valores {
-		suma += valor
+		suma += valor // suma = suma + valor
 	}
 	return suma
 }
 
 func main() {
-	resultadoVarios := sumarVarios(1, 2, 3, 4, 5)
+	resultadoVarios := sumarVarios(10, 20, 30, 40, 50)
 	fmt.Println("El resultado de la suma de varios es:", resultadoVarios)
 
 	var numero1, numero2 int

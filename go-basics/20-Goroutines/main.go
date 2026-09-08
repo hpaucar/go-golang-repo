@@ -17,7 +17,7 @@ import (
 //
 
 func saludar(saludo string) {
-	for range 5 {
+	for range 50 {
 		fmt.Println(saludo)
 	}
 }
