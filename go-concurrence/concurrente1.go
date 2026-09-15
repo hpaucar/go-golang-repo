@@ -20,10 +20,11 @@ func p() {
 	// k1 es una variable local.
 	// Solo puede ser utilizada por la goroutine que ejecuta p().
 	k1 := 1
-
+    time.Sleep(3600 * time.Millisecond)
 	// Escritura sobre la variable global compartida.
 	// Esta instrucción compite con la escritura realizada en q().
 	n = k1
+	fmt.Println("Ya terminé desde p()")
 }
 
 // q representa el segundo proceso o tarea concurrente.
@@ -35,6 +36,7 @@ func q() {
 	// Escritura sobre la variable global compartida.
 	// No existe sincronización con la escritura realizada en p().
 	n = k2
+	fmt.Println("Ya terminé desde q()")
 }
 
 func main() {
