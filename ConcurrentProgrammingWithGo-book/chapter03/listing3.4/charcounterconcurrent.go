@@ -1,3 +1,10 @@
+/*
+ * Descarga concurrentemente los RFC 1000 al 1030 mediante goroutines y 
+ * acumula sus frecuencias de letras en contadores compartidos.
+ * Ilustra una carrera de datos al actualizar los contadores sin protección
+ * y una espera fija que no garantiza que las tareas terminen.
+ */
+
 package main
 
 import (

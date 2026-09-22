@@ -1,3 +1,9 @@
+/*
+ * Simula depósitos y retiros concurrentes sobre un saldo compartido, 
+ * usando sync.Mutex para proteger sus actualizaciones y su lectura.
+ * Evita la carrera de datos, pero la espera fija de dos segundos no 
+ * garantiza que ambas goroutines terminen ni que el saldo mostrado sea 100.
+ */
 package main
 
 import (

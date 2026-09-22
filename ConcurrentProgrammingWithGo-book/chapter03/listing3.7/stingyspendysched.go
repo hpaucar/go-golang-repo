@@ -1,3 +1,10 @@
+/*
+ * Simula depósitos y retiros concurrentes sobre un saldo compartido, 
+ * cediendo la ejecución con runtime.Gosched() después de cada operación.
+ * Ilustra que ceder la ejecución no evita la carrera de datos y que una 
+ * espera fija no garantiza que ambas goroutines terminen.
+ * "runtime.Gosched()": Puedo continuar, pero cedo mi turno para que otras tareas tengan oportunidad de avanzar
+ */
 package main
 
 import (
@@ -31,5 +38,5 @@ func main() {
     go stingy(&money)
     go spendy(&money)
     time.Sleep(2 * time.Second)
-    fmt.Print("Money in bank account: ", money)
+    fmt.Println("Money in bank account: ", money)
 }

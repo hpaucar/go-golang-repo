@@ -1,3 +1,10 @@
+/*
+ * Descarga secuencialmente los documentos "rfc1000.txt" al "rfc1030.txt" y cuenta 
+ * las letras de la "a" a la "z", sin distinguir mayúsculas.
+ * Acumula las frecuencias de todos los documentos y muestra el total
+ * de apariciones de cada letra.
+ */
+
 package main
 
 import (
@@ -27,6 +34,7 @@ func countLetters(url string, frequency []int) {
 }
 
 func main() {
+    // Crea 26 contadores, inicializados automáticamente en cero.
     var frequency = make([]int, 26)
     for i := 1000; i <= 1030; i++ {
         url := fmt.Sprintf("https://rfc-editor.org/rfc/rfc%d.txt", i)

@@ -1,3 +1,9 @@
+/*
+ * Simula una cuenta con saldo inicial de 100 y dos goroutines que realizan 
+ * un millón de depósitos y retiros de 10, respectivamente.
+ * Ilustra una carrera de datos sobre el saldo compartido y una espera 
+ * fija que no garantiza la finalización de ambas goroutines.
+ */
 package main
 
 import (
