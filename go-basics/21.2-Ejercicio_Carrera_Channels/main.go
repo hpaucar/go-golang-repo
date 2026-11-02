@@ -1,3 +1,34 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Implementar una "carrera de consultas": dos goroutines simulan
+ *              consultas a dos servidores con un retraso aleatorio de 500 a
+ *              1499 ms, y `select` procesa solo la primera respuesta que llega.
+ *              Un `time.After` de 2 segundos actúa como tiempo límite
+ *              (timeout).
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Los mensajes "🔍 Consultando Servidor A..." y "🔍 Consultando
+ *              Servidor B..." y luego la primera respuesta, con el nombre del
+ *              servidor y su tiempo. El ganador cambia entre ejecuciones; el
+ *              timeout nunca se activa, porque el retraso máximo es menor que 2
+ *              s.
+ *
+ * Notas:
+ *    1. `select` espera varias operaciones de canal y ejecuta la primera que
+ *       esté lista; si hay varias listas, elige una al azar.
+ *    2. `time.After(d)` devuelve un canal que recibe un valor después de `d`;
+ *       es la forma habitual de poner un timeout.
+ *    3. La goroutine perdedora queda bloqueada para siempre al enviar en un
+ *       canal sin búfer (goroutine leak). Aquí no importa porque el programa
+ *       termina, pero en un servidor se usaría un canal con búfer o `context`
+ *       para cancelarla.
+ */
+
 package main
 
 import (

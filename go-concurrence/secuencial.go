@@ -1,7 +1,25 @@
-// Ejemplo de un algoritmo secuencial.
-//
-// Todas las instrucciones se ejecutan una después de otra,
-// siguiendo el orden en el que aparecen en el programa.
+/*
+ * Archivo:     secuencial.go
+ *
+ * Propósito:   Mostrar un algoritmo secuencial como punto de comparación con
+ *              los ejemplos concurrentes. Las instrucciones se ejecutan una
+ *              después de otra, en el orden en que aparecen: `n` recibe primero
+ *              el valor de `k1` y luego el de `k2`.
+ *
+ * Compilación: go build secuencial.go
+ * Ejecución:   ./secuencial
+ *              (Alternativamente: go run secuencial.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "El resultado de n es 2", siempre.
+ *
+ * Notas:
+ *    1. En un programa secuencial el resultado es determinista: con los mismos
+ *       datos, siempre se obtiene el mismo valor.
+ *    2. Compárelo con `concurrente1.go`, que hace las mismas asignaciones en
+ *       dos goroutines; allí el resultado depende del orden de ejecución.
+ */
+
 package main
 
 import "fmt"

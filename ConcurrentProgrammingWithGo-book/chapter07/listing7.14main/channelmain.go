@@ -1,31 +1,27 @@
 /*
- * Archivo:     custom_channel_test.go
+ * Archivo:     channelmain.go
  *
- * Propósito:   Demostrar el uso práctico del canal personalizado basado en 
- *              semáforos (`listing7_14.Channel`) que implementamos en el ejemplo 
- *              anterior. El programa simula un patrón productor-consumidor 
- *              utilizando capacidad acotada y un valor centinela (`-1`) para 
- *              finalizar la goroutine receptora de forma coordinada.
+ * Propósito:   Usar el canal propio basado en semáforos de listing7.14
+ *              (`listing7_14.Channel`) en un patrón productor-consumidor con
+ *              capacidad 10 y el valor centinela `-1` para terminar.
  *
- * Compilación: go build custom_channel_test.go
- * Ejecución:   (Requiere la implementación del paquete `listing7_14` y sus 
- *              dependencias del libro de J. Cutajar).
+ * Compilación: go build channelmain.go
+ * Ejecución:   ./channelmain
+ *              (Alternativamente: go run channelmain.go)
  *
  * Entrada:     Ninguna.
- * Salida:      Imprime en consola los mensajes de envío secuencial de los 
- *              enteros del 1 al 6 más el valor centinela, junto con su respectiva 
- *              recepción diferida por el hilo receptor con intervalos de 1 segundo.
+ * Salida:      "Sending:  1" a "Sending:  6" casi al instante (caben en el
+ *              búfer) y luego "Received: 1" ... "Received: -1", uno por
+ *              segundo.
  *
- * Notas:       
- *    1. `listing7_14.NewChannel[int](10)` inicializa un canal genérico seguro 
- *       para hilos con una capacidad de búfer de hasta 10 elementos.
- *    2. La función `main` actúa como emisor enviando 6 elementos seguidos del 
- *       valor centinela `-1`, mientras que la función `receiver` extrae los 
- *       elementos utilizando el método `Receive()` con un retraso de 1 segundo 
- *       por cada lectura.
- *    3. Se emplea un `sync.WaitGroup` para asegurar que el hilo principal espere 
- *       a que el receptor procese todos los datos (incluyendo el centinela) y 
- *       llame a `wGroup.Done()` antes de finalizar la ejecución del programa.
+ * Notas:
+ *    1. `listing7_14.NewChannel[int](10)` crea un canal con búfer de 10
+ *       elementos, por eso `main` no se bloquea al enviar.
+ *    2. `receiver` lee con `Receive()` cada segundo hasta recibir `-1`;
+ *       `sync.WaitGroup` hace que `main` lo espere.
+ *    3. La ruta de importación usa `chapter7/listing7.14`, pero la carpeta
+ *       real es `chapter07/`; tal como está, `go build` falla con "no
+ *       required module provides package".
  */
 
 package main

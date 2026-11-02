@@ -1,7 +1,33 @@
-// Ejemplo de un algoritmo concurrente en Go.
-//
-// El programa crea dos goroutines que acceden y modifican una misma
-// variable global. Su finalidad es demostrar una condición de carrera.
+/*
+ * Archivo:     concurrente1.go
+ *
+ * Propósito:   Mostrar una condición de carrera (race condition): dos
+ *              goroutines, `p` y `q`, escriben en la misma variable global `n`
+ *              (los valores 1 y 2) sin sincronización, y `main` imprime el
+ *              valor final después de esperar 600 ms con `time.Sleep`.
+ *
+ * Compilación: go build concurrente1.go
+ * Ejecución:   ./concurrente1
+ *              (Alternativamente: go run concurrente1.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "Ya terminé desde q()" y "El valor final de n es 2". En la
+ *              práctica el resultado siempre es 2: `p` espera 3600 ms antes de
+ *              escribir, pero `main` termina a los 600 ms, así que `p` nunca
+ *              llega a escribir ni a imprimir su mensaje.
+ *
+ * Notas:
+ *    1. La instrucción `go` inicia una goroutine y `main` no espera a que
+ *       termine; cuando `main` termina, el programa termina y las demás
+ *       goroutines se detienen.
+ *    2. `time.Sleep` no es un mecanismo de sincronización. Si se quita la pausa
+ *       de `p` (o se alarga la de `main`), el resultado puede ser 1 o 2 según
+ *       qué goroutine escriba al final.
+ *    3. `go run -race concurrente1.go` detecta el acceso sin sincronización a
+ *       `n`. Para coordinar goroutines se usan `sync.WaitGroup`, `sync.Mutex` o
+ *       canales.
+ */
+
 package main
 
 import (

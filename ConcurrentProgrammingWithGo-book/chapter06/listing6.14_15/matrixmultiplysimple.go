@@ -1,3 +1,25 @@
+/*
+ * Archivo:     matrixmultiplysimple.go
+ *
+ * Propósito:   Multiplicar matrices de forma secuencial: en cuatro rondas se
+ *              generan dos matrices aleatorias de 3x3 (valores de -5 a 4) y se
+ *              calcula su producto con tres bucles anidados. Es la versión base
+ *              para comparar con la versión concurrente con barrera.
+ *
+ * Compilación: go build matrixmultiplysimple.go
+ * Ejecución:   ./matrixmultiplysimple
+ *              (Alternativamente: go run matrixmultiplysimple.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Cuatro bloques de tres líneas; cada línea muestra una fila de A,
+ *              una fila de B y la fila correspondiente del resultado.
+ *
+ * Notas:
+ *    1. La constante `matrixSize` define el tamaño de las matrices.
+ *    2. No se fija la semilla de `math/rand`; según la versión de Go, las
+ *       matrices pueden repetirse o cambiar entre ejecuciones.
+ */
+
 package main
 
 import (

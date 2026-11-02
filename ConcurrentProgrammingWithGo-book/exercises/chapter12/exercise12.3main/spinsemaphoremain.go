@@ -1,3 +1,28 @@
+/*
+ * Archivo:     spinsemaphoremain.go
+ *
+ * Propósito:   Programa de prueba del ejercicio 12.3 del libro *Learn
+ *              Concurrent Programming with Go*: diez goroutines compiten por un
+ *              `SpinSemaphore` de 2 permisos; cada una lo toma, espera 2
+ *              segundos y lo libera. `main` espera a todas con un
+ *              `sync.WaitGroup`.
+ *
+ * Compilación: go build spinsemaphoremain.go
+ * Ejecución:   ./spinsemaphoremain
+ *              (Alternativamente: go run spinsemaphoremain.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Mensajes "N has acquired the semaphore" y "N releasing the
+ *              semaphore", nunca con más de 2 goroutines dentro a la vez.
+ *              Termina en unos 10 segundos.
+ *
+ * Notas:
+ *    1. Mientras esperan, las goroutines giran en el bucle de `Acquire` y
+ *       consumen CPU; se nota con `top`.
+ *    2. El orden en que las goroutines obtienen el semáforo no está
+ *       garantizado.
+ */
+
 package main
 
 import (

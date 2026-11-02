@@ -1,32 +1,27 @@
 /*
- * Archivo:     unbuffered_channel_deadlock.go
+ * Archivo:     noreceiver.go
  *
- * Propósito:   Ilustrar el comportamiento de los canales sin búfer (unbuffered 
- *              channels) en Go y cómo se produce un interbloqueo (deadlock) 
- *              cuando se intenta enviar datos a través de un canal que nunca 
- *              es leído por el receptor.
+ * Propósito:   Ilustrar qué ocurre al enviar por un canal sin búfer
+ *              (unbuffered channel) cuando nadie lee de él: la goroutine
+ *              `receiver` solo duerme 5 segundos y nunca lee el canal.
  *
- * Compilación: go build unbuffered_channel_deadlock.go
- * Ejecución:   ./unbuffered_channel_deadlock
- *              (Alternativamente: go run unbuffered_channel_deadlock.go)
+ * Compilación: go build noreceiver.go
+ * Ejecución:   ./noreceiver
+ *              (Alternativamente: go run noreceiver.go)
  *
  * Entrada:     Ninguna.
- * Salida:      El programa imprimirá "Sending HELLO...", luego de 5 segundos 
- *              la goroutine receptora mostrará "Receiver slept for 5 seconds", 
- *              y finalmente el runtime de Go detectará un bloqueo y arrojará 
- *              el error fatal: "fatal error: all goroutines are asleep - deadlock!".
+ * Salida:      Imprime "Sending HELLO...", después de 5 segundos "Receiver
+ *              slept for 5 seconds" y luego el programa aborta con "fatal
+ *              error: all goroutines are asleep - deadlock!".
  *
- * Notas:       
- *    1. Los canales sin búfer en Go son estrictamente sincrónicos: una operación 
- *       de envío (`ch <- val`) bloquea a la goroutine emisora hasta que otra 
- *       goroutine realiza una operación de recepción (`<-ch`).
- *    2. En este ejemplo, la función `receiver` duerme durante 5 segundos e 
- *       imprime un mensaje, pero **nunca lee** del canal `messages` (`<-messages`).
- *    3. Como resultado, cuando la función `main` intenta ejecutar `msgChannel <- "HELLO"`, 
- *       se bloquea indefinidamente esperando un receptor. Dado que la única otra 
- *       goroutine activa termina su ejecución poco después, el runtime de Go 
- *       detecta que todas las goroutines están dormidas sin esperanza de despertar 
- *       y aborta el programa con un error de interbloqueo.
+ * Notas:
+ *    1. Un envío (`ch <- val`) en un canal sin búfer bloquea a la goroutine
+ *       emisora hasta que otra goroutine haga la recepción (`<-ch`).
+ *    2. `receiver` nunca ejecuta `<-messages`, así que `main` se queda
+ *       bloqueada en `msgChannel <- "HELLO"`.
+ *    3. Cuando `receiver` termina, todas las goroutines están bloqueadas y el
+ *       runtime de Go detecta el interbloqueo (deadlock) y detiene el
+ *       programa.
  */
 
 package main

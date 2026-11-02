@@ -1,33 +1,28 @@
 /*
- * Archivo:     channel_comma_ok.go
+ * Archivo:     closingFlag.go
  *
- * Propósito:   Ilustrar el uso del idiom "comma-ok" (`msg, more := <-messages`) 
- *              en Go para detectar de forma explícita y segura si un canal 
- *              ha sido cerrado. Demuestra cómo una goroutine receptora puede 
- *              finalizar su ciclo de ejecución de manera ordenada tras procesar 
- *              todos los elementos enviados.
+ * Propósito:   Ilustrar la lectura con dos valores (comma-ok,
+ *              `msg, more := <-messages`) para detectar si un canal fue
+ *              cerrado, de modo que el receptor termine de forma ordenada.
  *
- * Compilación: go build channel_comma_ok.go
- * Ejecución:   ./channel_comma_ok
- *              (Alternativamente: go run channel_comma_ok.go)
+ * Compilación: go build closingFlag.go
+ * Ejecución:   ./closingFlag
+ *              (Alternativamente: go run closingFlag.go)
  *
  * Entrada:     Ninguna.
- * Salida:      Mensajes con marcas de tiempo que muestran el envío y la 
- *              recepción de los valores 1, 2 y 3 acompañados de `true`. Tras 
- *              cerrar el canal, se recibe el valor cero acompañado de `false`, 
- *              lo que provoca que la función `receiver` termine limpiamente.
+ * Salida:      Líneas con hora (HH:MM:SS) con "Sending: i" y
+ *              "Received: i true" para 1, 2 y 3. Tras el cierre se imprime
+ *              "Received: 0 false" y `receiver` termina.
  *
- * Notas:       
- *    1. La sintaxis `msg, more := <-messages` devuelve el valor leído y un 
- *       booleano `more`. Si `more` es `true`, el canal sigue abierto o tiene 
- *       datos; si es `false`, el canal está cerrado y el valor recibido es 
- *       el valor cero del tipo de dato (`0` para `int`).
- *    2. La condición `if !more { return }` permite que el receptor reaccione 
- *       al cierre del canal y salga de su bucle infinito sin consumir 
- *       indefinidamente valores cero.
- *    3. Este enfoque es el equivalente manual y explícito al uso del bucle 
- *       `for range`, ideal cuando se requiere realizar lógica adicional justo 
- *       en el momento en que se detecta el cierre del canal.
+ * Notas:
+ *    1. `msg, more := <-messages` devuelve el valor y un booleano: `more` es
+ *       `true` si el valor vino de un envío y `false` si el canal está
+ *       cerrado y vacío (entonces `msg` es el valor cero, `0`).
+ *    2. `if !more { return }` hace que el receptor salga del bucle al detectar
+ *       el cierre, en lugar de leer ceros sin fin (compárese con
+ *       listing7.08_09).
+ *    3. Es la versión explícita de `for range` sobre un canal; útil cuando se
+ *       necesita hacer algo justo al detectar el cierre.
  */
 
 package main

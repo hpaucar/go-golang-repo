@@ -1,3 +1,30 @@
+/*
+ * Archivo:     readwritewpref.go
+ *
+ * Propósito:   Implementar un mutex de lectura-escritura con preferencia de
+ *              escritura usando `sync.Cond`: cuando un escritor espera, los
+ *              nuevos lectores se bloquean. Se prueba con el mismo escenario
+ *              del listado 5.10 (dos lectores en bucle infinito y un escritor).
+ *
+ * Compilación: go build readwritewpref.go
+ * Ejecución:   ./readwritewpref
+ *              (Alternativamente: go run readwritewpref.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Algunas líneas "Read done" y luego "Write finished"; el programa
+ *              termina cuando el escritor obtiene el candado.
+ *
+ * Notas:
+ *    1. `writersWaiting` y `writerActive` forman el estado compartido; todas
+ *       las comprobaciones se hacen en bucles `for` alrededor de `Wait()`.
+ *    2. `ReadLock()` espera mientras haya escritores esperando o activos, por
+ *       eso los lectores ya no pueden matar de hambre al escritor.
+ *    3. Se usa `Broadcast()` porque pueden esperar lectores y escritores a la
+ *       vez y todos deben revisar su condición.
+ *    4. Con esta política pueden sufrir inanición los lectores si llegan
+ *       escritores sin parar.
+ */
+
 package main
 
 import (

@@ -1,3 +1,28 @@
+/*
+ * Archivo:     downloadpages.go
+ *
+ * Propósito:   Ilustrar un pipeline de dos etapas: `generateUrls` produce las
+ *              URL de los RFC 100 a 130 y `downloadPages` descarga cada una y
+ *              envía su texto por otro canal. Ambas etapas respetan `quit`.
+ *
+ * Compilación: go build downloadpages.go
+ * Ejecución:   ./downloadpages
+ *              (Alternativamente: go run downloadpages.go)
+ *
+ * Entrada:     Red: descarga los RFC 100 a 130 desde
+ *              https://rfc-editor.org/rfc/rfc<N>.txt.
+ * Salida:      El texto completo de los 31 documentos, en orden.
+ *
+ * Notas:
+ *    1. Cada etapa es una goroutine que lee un canal, procesa y escribe en
+ *       otro; cuando su entrada se cierra, cierra su salida (`defer close`).
+ *    2. `url, moreData = <-urls` dentro del `select` detecta el cierre del
+ *       canal de entrada.
+ *    3. El error de `http.Get` se ignora: sin red, `resp` es `nil` y el
+ *       programa termina con un pánico. Si algún documento no devuelve 200,
+ *       también hay pánico ("Server's error: ...").
+ */
+
 package main
 
 import (

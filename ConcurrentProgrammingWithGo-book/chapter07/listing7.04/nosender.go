@@ -1,33 +1,28 @@
 /*
- * Archivo:     unbuffered_channel_receiver_block.go
+ * Archivo:     nosender.go
  *
- * Propósito:   Ilustrar el comportamiento sincrónico y bloqueante de los canales 
- *              sin búfer (unbuffered channels) desde la perspectiva del receptor. 
- *              El hilo principal intenta leer de un canal, mientras que la 
- *              goroutine emisora duerme y termina su ejecución sin enviar ningún dato.
+ * Propósito:   Ilustrar el bloqueo del lado receptor en un canal sin búfer:
+ *              `main` intenta leer del canal, pero la goroutine `sender` solo
+ *              duerme 5 segundos y termina sin enviar ningún dato.
  *
- * Compilación: go build unbuffered_channel_receiver_block.go
- * Ejecución:   ./unbuffered_channel_receiver_block
- *              (Alternativamente: go run unbuffered_channel_receiver_block.go)
+ * Compilación: go build nosender.go
+ * Ejecución:   ./nosender
+ *              (Alternativamente: go run nosender.go)
  *
  * Entrada:     Ninguna.
- * Salida:      El programa imprimirá "Reading message from channel...", luego de 
- *              5 segundos la función `sender` mostrará "Sender slept for 5 seconds", 
- *              y finalmente el runtime de Go detectará un bloqueo y arrojará el 
- *              error fatal: "fatal error: all goroutines are asleep - deadlock!".
+ * Salida:      Imprime "Reading message from channel...", después de 5
+ *              segundos "Sender slept for 5 seconds" y luego el programa
+ *              aborta con "fatal error: all goroutines are asleep - deadlock!".
+ *              "Received:" nunca se imprime.
  *
- * Notas:       
- *    1. Las operaciones de lectura en un canal sin búfer (`<-ch`) son bloqueantes: 
- *       la goroutine receptora se suspende hasta que otra goroutine escriba un 
- *       valor en el canal.
- *    2. En este ejemplo, el hilo principal (`main`) se bloquea en la línea 
- *       `msg := <-msgChannel` esperando un mensaje.
- *    3. Sin embargo, la goroutine `sender` realiza un `time.Sleep` de 5 segundos 
- *       e imprime su mensaje, pero **nunca envía** nada a `msgChannel` (`messages <- val`) 
- *       antes de terminar.
- *    4. Al finalizar el emisor, la única goroutine restante (main) sigue bloqueada 
- *       esperando un dato que nunca llegará, provocando que el runtime de Go 
- *       interrumpa la ejecución por un interbloqueo (deadlock).
+ * Notas:
+ *    1. Una lectura (`<-ch`) en un canal sin búfer bloquea a la goroutine
+ *       hasta que otra goroutine escriba un valor en el canal.
+ *    2. `main` se bloquea en `msg := <-msgChannel`, pero `sender` nunca
+ *       ejecuta `messages <- ...`.
+ *    3. Cuando `sender` termina, solo queda `main` bloqueada esperando un dato
+ *       que nunca llegará, y el runtime de Go detecta el interbloqueo
+ *       (deadlock).
  */
 
 package main

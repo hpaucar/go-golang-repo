@@ -1,3 +1,30 @@
+/*
+ * Archivo:     channelcondvar.go
+ *
+ * Propósito:   Solución del ejercicio 7.4 del libro *Learn Concurrent
+ *              Programming with Go*, que pide implementar un canal propio con
+ *              variables de condición en lugar de semáforos. `Channel[M]` usa
+ *              una `sync.Cond` y una lista; `Receive` aumenta la capacidad
+ *              temporalmente, por lo que también funciona con capacidad 0.
+ *
+ * Compilación: go build channelcondvar.go
+ * Ejecución:   ./channelcondvar
+ *              (Alternativamente: go run channelcondvar.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "Sending: 1" a "Sending: 6" y "Received: 1" a "Received: -1". El
+ *              emisor se adelanta hasta llenar el búfer de 2 y luego avanza al
+ *              ritmo del receptor (uno por segundo).
+ *
+ * Notas:
+ *    1. `Send` espera mientras el búfer esté lleno; `Receive` espera mientras
+ *       esté vacío. Ambos usan `Broadcast` para despertar al otro lado.
+ *    2. Al incrementar `maxCapacity` antes de esperar, `Receive` deja pasar un
+ *       envío aunque la capacidad sea 0, como en un canal sin búfer.
+ *    3. El valor -1 es una señal de fin; `main` espera al receptor con un
+ *       `sync.WaitGroup`.
+ */
+
 package main
 
 import (

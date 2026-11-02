@@ -1,3 +1,29 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar cómo declarar funciones con parámetros y valor de
+ *              retorno (`sumar`) y con parámetros variádicos (`sumarVarios`).
+ *              El programa también lee dos números enteros desde el teclado con
+ *              `fmt.Scanln` y muestra su suma.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Dos números enteros escritos por el usuario en la entrada
+ *              estándar, uno por línea.
+ * Salida:      La suma 150 de los valores fijos, los mensajes que piden cada
+ *              número y la suma de los dos números ingresados.
+ *
+ * Notas:
+ *    1. El tipo se escribe después del nombre del parámetro, y el tipo de
+ *       retorno después de la lista de parámetros.
+ *    2. `valores ...int` recibe cualquier cantidad de enteros; dentro de la
+ *       función se usa como un slice `[]int`.
+ *    3. El programa ignora el error que devuelve `fmt.Scanln`: si se escribe un
+ *       texto no numérico, la variable queda en 0 sin aviso.
+ */
+
 package main
 
 import "fmt"

@@ -1,9 +1,28 @@
 /*
- * Simula depósitos y retiros concurrentes sobre un saldo compartido, 
- * usando sync.Mutex para proteger sus actualizaciones y su lectura.
- * Evita la carrera de datos, pero la espera fija de dos segundos no 
- * garantiza que ambas goroutines terminen ni que el saldo mostrado sea 100.
+ * Archivo:     stingyspendymutex.go
+ *
+ * Propósito:   Corregir la carrera de datos de la cuenta bancaria protegiendo
+ *              cada depósito, cada retiro y la lectura final del saldo con un
+ *              `sync.Mutex`. Cada goroutine adquiere el candado (lock) solo
+ *              durante la actualización.
+ *
+ * Compilación: go build stingyspendymutex.go
+ * Ejecución:   ./stingyspendymutex
+ *              (Alternativamente: go run stingyspendymutex.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "Stingy Done", "Spendy Done" y "Money in bank account: 100" si
+ *              ambas goroutines terminan en 2 segundos.
+ *
+ * Notas:
+ *    1. `mutex.Lock()` y `mutex.Unlock()` delimitan la sección crítica: solo
+ *       una goroutine a la vez modifica `money`.
+ *    2. La lectura del saldo en `main` también se protege con el mutex para no
+ *       leer un valor a medio actualizar.
+ *    3. La espera fija de 2 segundos no garantiza que ambas goroutines
+ *       terminen; en una máquina lenta el saldo mostrado podría no ser 100.
  */
+
 package main
 
 import (

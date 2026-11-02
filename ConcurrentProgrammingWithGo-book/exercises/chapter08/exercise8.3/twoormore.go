@@ -1,3 +1,30 @@
+/*
+ * Archivo:     twoormore.go
+ *
+ * Propósito:   Solución del ejercicio 8.3 del libro *Learn Concurrent
+ *              Programming with Go*, que pide un juego donde cuatro jugadores
+ *              envían movimientos por sus canales y la partida termina cuando
+ *              queda uno solo. Cuando un jugador cierra su canal, se reemplaza
+ *              por `nil` para que el `select` lo ignore.
+ *
+ * Compilación: go build twoormore.go
+ * Ejecución:   ./twoormore
+ *              (Alternativamente: go run twoormore.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Movimientos "Player N: UP/DOWN/LEFT/RIGHT", mensajes "Player N
+ *              left the game" con los jugadores restantes y, al final, "Game
+ *              finished".
+ *
+ * Notas:
+ *    1. Un caso de `select` sobre un canal `nil` nunca se elige; es la forma
+ *       estándar de desactivar un caso.
+ *    2. `move, moreData := <-ch` permite distinguir un valor real del cierre
+ *       del canal.
+ *    3. Cada jugador envía un número aleatorio de movimientos (0 a 99) con
+ *       pausas aleatorias, así que la salida cambia en cada ejecución.
+ */
+
 package main
 
 import (

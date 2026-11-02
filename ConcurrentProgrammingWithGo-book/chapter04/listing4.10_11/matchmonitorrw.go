@@ -1,3 +1,30 @@
+/*
+ * Archivo:     matchmonitorrw.go
+ *
+ * Propósito:   Repetir la simulación del servidor de resultados usando
+ *              `sync.RWMutex`: los 5000 lectores usan `RLock()`/`RUnlock()` y
+ *              pueden copiar la lista a la vez, mientras que el escritor
+ *              `matchRecorder` usa `Lock()`/`Unlock()` y tiene acceso
+ *              exclusivo.
+ *
+ * Compilación: go build matchmonitorrw.go
+ * Ejecución:   ./matchmonitorrw
+ *              (Alternativamente: go run matchmonitorrw.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Muchas líneas "N events copied in <tiempo>" y, de vez en cuando,
+ *              "Appended match event". Los tiempos suelen ser menores que en
+ *              matchmonitor.go. El programa dura 100 segundos.
+ *
+ * Notas:
+ *    1. Un candado de lectura-escritura (readers-writer lock) permite varios
+ *       lectores simultáneos o un solo escritor.
+ *    2. Conviene cuando las lecturas son mucho más frecuentes que las
+ *       escrituras.
+ *    3. La ganancia depende del número de núcleos; con `GOMAXPROCS=1` la
+ *       diferencia es pequeña.
+ */
+
 package main
 
 import (

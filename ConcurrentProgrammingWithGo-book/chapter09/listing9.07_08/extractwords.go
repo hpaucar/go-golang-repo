@@ -1,3 +1,28 @@
+/*
+ * Archivo:     extractwords.go
+ *
+ * Propósito:   Ilustrar un pipeline de tres etapas: generar URL de los RFC 100
+ *              a 130, descargar las páginas y extraer sus palabras
+ *              (`extractWords`, con la expresión regular `[a-zA-Z]+`).
+ *
+ * Compilación: go build extractwords.go
+ * Ejecución:   ./extractwords
+ *              (Alternativamente: go run extractwords.go)
+ *
+ * Entrada:     Red: descarga los RFC 100 a 130 desde
+ *              https://rfc-editor.org/rfc/rfc<N>.txt.
+ * Salida:      Todas las palabras de los documentos en minúsculas, una por
+ *              línea (muchas líneas).
+ *
+ * Notas:
+ *    1. Cada etapa añadida solo necesita un canal de entrada, uno de salida
+ *       y el canal `quit`; las etapas se componen como funciones.
+ *    2. Las etapas trabajan en paralelo: mientras se descarga una página, se
+ *       extraen las palabras de la anterior.
+ *    3. Igual que en listing9.05_06, sin red o con un código distinto de 200
+ *       el programa termina con un pánico.
+ */
+
 package main
 
 import (

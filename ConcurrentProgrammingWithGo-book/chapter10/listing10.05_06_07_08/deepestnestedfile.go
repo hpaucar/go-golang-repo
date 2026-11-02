@@ -1,3 +1,32 @@
+/*
+ * Archivo:     deepestnestedfile.go
+ *
+ * Propósito:   Ilustrar el patrón fork-join con un canal de resultados. Se
+ *              recorre un árbol de directorios con `filepath.Walk`; por cada
+ *              archivo `.go` se lanza (fork) una goroutine que calcula la
+ *              profundidad máxima de llaves `{}`. La goroutine de
+ *              `joinResults` (join) reúne los resultados y elige el mayor.
+ *
+ * Compilación: go build deepestnestedfile.go
+ * Ejecución:   ./deepestnestedfile ./ruta/directorio
+ *              (Alternativamente: go run deepestnestedfile.go ./ruta/directorio)
+ *
+ * Entrada:     Un argumento de línea de comandos: la ruta del directorio
+ *              raíz. Se recorren también todos sus subdirectorios.
+ * Salida:      Una línea con el archivo `.go` que tiene el bloque de código
+ *              más anidado y su nivel de anidamiento.
+ *
+ * Notas:
+ *    1. `main` espera con `wg.Wait()` a que terminen todas las goroutines
+ *       de trabajo y solo entonces cierra `partialResults`; el cierre hace
+ *       que el `for range` de `joinResults` termine y envíe el máximo.
+ *    2. `joinResults` debe estar en marcha antes de `wg.Wait()`: el canal
+ *       no tiene búfer y, sin un lector, las goroutines de trabajo quedarían
+ *       bloqueadas en el envío y `wg.Wait()` nunca volvería.
+ *    3. El conteo de llaves es aproximado: también cuenta las `{` y `}` que
+ *       aparecen dentro de cadenas o comentarios.
+ */
+
 package main
 
 import (

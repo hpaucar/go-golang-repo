@@ -1,3 +1,28 @@
+/*
+ * Archivo:     scoreupdate.go
+ *
+ * Propósito:   Código de partida del ejercicio 11.1 del libro *Learn Concurrent
+ *              Programming with Go*, que pide encontrar y corregir el
+ *              interbloqueo (deadlock). Mil goroutines suman puntos a
+ *              subconjuntos aleatorios de jugadores y bloquean el mutex de cada
+ *              uno en un orden aleatorio.
+ *
+ * Compilación: go build scoreupdate.go
+ * Ejecución:   ./scoreupdate
+ *              (Alternativamente: go run scoreupdate.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Si termina, el puntaje de cada jugador. Lo más probable es que
+ *              se detenga con "fatal error: all goroutines are asleep -
+ *              deadlock!".
+ *
+ * Notas:
+ *    1. El deadlock ocurre cuando dos goroutines toman los mismos mutex en
+ *       orden distinto y cada una espera el que tiene la otra.
+ *    2. La solución, en `../exercise11.1solution/scoreupdate.go`, ordena los
+ *       jugadores antes de bloquearlos.
+ */
+
 package main
 
 import (

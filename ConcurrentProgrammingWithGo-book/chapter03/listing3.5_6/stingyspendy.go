@@ -1,9 +1,28 @@
 /*
- * Simula una cuenta con saldo inicial de 100 y dos goroutines que realizan 
- * un millón de depósitos y retiros de 10, respectivamente.
- * Ilustra una carrera de datos sobre el saldo compartido y una espera 
- * fija que no garantiza la finalización de ambas goroutines.
+ * Archivo:     stingyspendy.go
+ *
+ * Propósito:   Simular una cuenta bancaria con saldo inicial de 100 y dos
+ *              goroutines: `stingy` hace un millón de depósitos de 10 y
+ *              `spendy` un millón de retiros de 10. Ilustra una condición de
+ *              carrera (race condition) sobre el saldo compartido.
+ *
+ * Compilación: go build stingyspendy.go
+ * Ejecución:   ./stingyspendy
+ *              (Alternativamente: go run stingyspendy.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "Stingy Done", "Spendy Done" y el saldo final. El valor esperado
+ *              es 100, pero suele salir otro número distinto en cada ejecución.
+ *
+ * Notas:
+ *    1. `*money += 10` es una secuencia leer-modificar-escribir; si dos
+ *       goroutines la intercalan, se pierden actualizaciones.
+ *    2. Ejecute `go run -race stingyspendy.go` para que el detector de carreras
+ *       lo muestre.
+ *    3. La espera fija de 2 segundos con `time.Sleep` no garantiza que ambas
+ *       goroutines hayan terminado.
  */
+
 package main
 
 import (

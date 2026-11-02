@@ -1,3 +1,32 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar los slices, la colección dinámica más usada en Go:
+ *              creación con `make`, longitud (`len`) y capacidad (`cap`),
+ *              crecimiento con `append`, slices literales y comparación con
+ *              `slices.Equal`.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      El contenido, la longitud y la capacidad de cada slice; por
+ *              ejemplo, al agregar "Pájaro" a un slice de longitud y capacidad
+ *              4, la capacidad pasa a 8. Al final indica que `flores` y
+ *              `frutas` son diferentes y que `slice1` y `slice2` son iguales.
+ *
+ * Notas:
+ *    1. Un slice es una vista sobre un arreglo interno; cuando `append` supera
+ *       la capacidad, Go reserva un arreglo nuevo más grande y copia los
+ *       elementos. El crecimiento exacto depende de la versión de Go.
+ *    2. Los slices no se pueden comparar con `==` (solo con `nil`); por eso se
+ *       usa `slices.Equal` (Go 1.21 o posterior).
+ *    3. El slice creado con `make([]string, 2, 4)` se reemplaza en la línea
+ *       siguiente por un literal, así que esa longitud y capacidad iniciales no
+ *       se llegan a usar.
+ */
+
 package main
 
 import (

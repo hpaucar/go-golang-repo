@@ -1,3 +1,30 @@
+/*
+ * Archivo:     wordstats.go
+ *
+ * Propósito:   Ilustrar el patrón broadcast en un pipeline: las palabras de
+ *              los RFC 100 a 130 (fan-out/fan-in) se copian con
+ *              `listing9_14.Broadcast` a dos etapas, `longestWords` y
+ *              `frequentWords`, que trabajan en paralelo.
+ *
+ * Compilación: go build wordstats.go
+ * Ejecución:   ./wordstats
+ *              (Alternativamente: go run wordstats.go)
+ *
+ * Entrada:     Red: descarga los RFC 100 a 130 desde
+ *              https://rfc-editor.org/rfc/rfc<N>.txt.
+ * Salida:      "Longest Words: ..." con las 10 palabras más largas y "Most
+ *              frequent Words: ..." con las 10 más frecuentes.
+ *
+ * Notas:
+ *    1. Gracias a `Broadcast`, el mismo flujo de palabras alimenta dos
+ *       cálculos distintos sin descargar las páginas dos veces.
+ *    2. `frequentWords` cuenta las apariciones con un mapa y ordena la lista
+ *       de palabras por frecuencia.
+ *    3. La ruta de importación usa `chapter9/...`, pero la carpeta real es
+ *       `chapter09/`; tal como está, `go build` falla con "no required module
+ *       provides package". Hay que corregir la ruta para compilar.
+ */
+
 package main
 
 import (

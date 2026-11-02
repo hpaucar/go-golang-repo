@@ -1,3 +1,33 @@
+/*
+ * Archivo:     wordfrequency.go
+ *
+ * Propósito:   Solución del ejercicio 3.1 del libro *Learn Concurrent
+ *              Programming with Go*, que pide adaptar el programa de frecuencia
+ *              de letras para contar palabras: descarga los RFC 1000 a 1020 en
+ *              21 goroutines y cada una actualiza un mapa compartido
+ *              `frequency` con las palabras encontradas.
+ *
+ * Compilación: go build wordfrequency.go
+ * Ejecución:   ./wordfrequency
+ *              (Alternativamente: go run wordfrequency.go)
+ *
+ * Entrada:     Ninguna por teclado; descarga los documentos desde
+ *              https://rfc-editor.org (requiere conexión a Internet).
+ * Salida:      "Completed: <url>" por cada RFC descargado y luego cada palabra
+ *              con su frecuencia. Los conteos pueden ser incorrectos y el
+ *              programa puede abortar con "fatal error: concurrent map writes".
+ *
+ * Notas:
+ *    1. El programa tiene una condición de carrera intencional: varias
+ *       goroutines escriben en el mismo mapa sin protección. Ejecútelo con `go
+ *       run -race wordfrequency.go` para verla.
+ *    2. El temporizador de 10 segundos al final puede necesitar ajustes según
+ *       la velocidad de la conexión.
+ *    3. No se verifica el error de `http.Get`: si falla la red, `resp` es `nil`
+ *       y el programa entra en pánico. La versión corregida con mutex es el
+ *       ejercicio 4.4.
+ */
+
 package main
 
 import (

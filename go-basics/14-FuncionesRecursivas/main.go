@@ -1,3 +1,29 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar la recursión con dos ejemplos: la función `factorial` y
+ *              una función anónima recursiva que calcula el n-ésimo número de
+ *              Fibonacci, asignada a una variable declarada antes (`var
+ *              fibonacci func(numeroBase int) int`).
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      El factorial de 5 (120) y de 7 (5040), y los números de
+ *              Fibonacci del 1 al 7 (1, 1, 2, 3, 5, 8 y 13).
+ *
+ * Notas:
+ *    1. Toda recursión necesita un caso base (`n <= 1`) que detenga las
+ *       llamadas.
+ *    2. Una función anónima solo puede llamarse a sí misma si la variable se
+ *       declara antes de asignarla; con `fibonacci := func...` no compila.
+ *    3. Este Fibonacci recursivo tiene un costo exponencial porque repite
+ *       cálculos; para valores grandes se usa memoización o una versión
+ *       iterativa.
+ */
+
 package main
 
 import "fmt"

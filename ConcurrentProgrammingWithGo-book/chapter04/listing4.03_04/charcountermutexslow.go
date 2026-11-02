@@ -1,3 +1,30 @@
+/*
+ * Archivo:     charcountermutexslow.go
+ *
+ * Propósito:   Contar las letras de los RFC 1000 a 1030 con una goroutine por
+ *              documento y un `sync.Mutex` que protege el slice de frecuencias.
+ *              Muestra una MALA ubicación del candado: se bloquea toda la
+ *              función, incluida la descarga HTTP, y el programa pierde la
+ *              concurrencia.
+ *
+ * Compilación: go build charcountermutexslow.go
+ * Ejecución:   ./charcountermutexslow
+ *              (Alternativamente: go run charcountermutexslow.go)
+ *
+ * Entrada:     Ninguna por teclado. Requiere conexión a Internet (31 peticiones
+ *              HTTP).
+ * Salida:      Líneas "Completed: <url> HH:MM:SS" que aparecen de una en una y,
+ *              tras 60 segundos, las frecuencias "a-N ... z-N".
+ *
+ * Notas:
+ *    1. Como el candado cubre `http.Get`, las descargas se ejecutan una tras
+ *       otra: el resultado es correcto, pero tan lento como la versión
+ *       secuencial.
+ *    2. Regla práctica: mantenga la sección crítica lo más pequeña posible y no
+ *       incluya E/S lenta dentro de ella. El listado 4.5 lo corrige.
+ *    3. La espera fija de 60 segundos puede no bastar con una red lenta.
+ */
+
 package main
 
 import (

@@ -1,3 +1,31 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar las goroutines. Primero llama a `saludar` de forma
+ *              normal (secuencial) y luego lanza dos goroutines con `go
+ *              saludar(...)`, que se ejecutan de manera concurrente mientras
+ *              `main` espera un segundo con `time.Sleep`.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      50 líneas "👋 Hola a todos" en orden; luego 50 líneas "🌞 Good
+ *              morning" y 50 líneas "🌍 Hello world", intercaladas de forma
+ *              distinta en cada ejecución; al final, "✅ Programa finalizado".
+ *
+ * Notas:
+ *    1. La palabra `go` inicia una función en una nueva goroutine y no espera a
+ *       que termine.
+ *    2. Cuando `main` termina, el programa termina y se detienen todas las
+ *       goroutines. `time.Sleep` solo da tiempo; no garantiza que hayan
+ *       terminado. La forma correcta de esperarlas es `sync.WaitGroup` o
+ *       canales.
+ *    3. Las goroutines son concurrentes; se ejecutan en paralelo solo si hay
+ *       varios núcleos disponibles.
+ */
+
 package main
 
 import (

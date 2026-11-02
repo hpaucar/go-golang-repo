@@ -1,32 +1,29 @@
 /*
- * Archivo:     producer_consumer_unbuffered.go
+ * Archivo:     directional.go
  *
- * Propósito:   Ilustrar un patrón clásico de productor-consumidor continuo 
- *              utilizando canales unidireccionales y sin búfer en Go. El 
- *              emisor (`sender`) genera y envía números enteros de manera 
- *              indefinida con un intervalo de 1 segundo, mientras el receptor 
- *              (`receiver`) los procesa de forma estrictamente sincrónica.
+ * Propósito:   Ilustrar los canales direccionales (`<-chan int` solo para
+ *              recibir y `chan<- int` solo para enviar) en un patrón
+ *              productor-consumidor con un canal sin búfer. `sender` envía
+ *              enteros sin fin cada segundo y `receiver` los imprime.
  *
- * Compilación: go build producer_consumer_unbuffered.go
- * Ejecución:   ./producer_consumer_unbuffered
- *              (Alternativamente: go run producer_consumer_unbuffered.go)
+ * Compilación: go build directional.go
+ * Ejecución:   ./directional
+ *              (Alternativamente: go run directional.go)
  *
  * Entrada:     Ninguna.
- * Salida:      Mensajes impresos con marcas de tiempo que muestran la secuencia 
- *              alternada de envío y recepción de valores enteros durante el 
- *              tiempo que el hilo principal se mantiene activo.
+ * Salida:      Líneas con hora (HH:MM:SS) que alternan "Sending: i" y
+ *              "Received: i" durante unos 5 segundos; luego el programa
+ *              termina.
  *
- * Notes:       
- *    1. El uso de parámetros con restricciones direccionales (`<-chan int` y 
- *       `chan<- int`) asegura la separación de responsabilidades en tiempo de 
- *       compilación: el emisor solo puede escribir y el receptor solo puede leer.
- *    2. Al tratarse de un canal sin búfer, la operación de envío en el emisor 
- *       se bloquea hasta que el receptor toma el elemento, logrando una 
- *       sincronización perfecta paso a paso.
- *    3. La llamada a `time.Sleep(5 * time.Second)` en el hilo principal finaliza 
- *       abruptamente el programa después de 5 segundos, terminando con todas 
- *       las goroutines en ejecución. En aplicaciones reales, se recomienda 
- *       gestionar la parada mediante canales de cancelación o `context`.
+ * Notas:
+ *    1. Los tipos direccionales (`<-chan int` y `chan<- int`) se verifican en
+ *       tiempo de compilación: el emisor solo puede escribir y el receptor
+ *       solo puede leer.
+ *    2. Como el canal no tiene búfer, cada envío espera a que el receptor tome
+ *       el valor (sincronización paso a paso).
+ *    3. `time.Sleep(5 * time.Second)` en `main` decide la duración: al
+ *       terminar `main` termina el programa y todas sus goroutines. En código
+ *       real conviene detenerlas con un canal de cancelación o `context`.
  */
 
 package main

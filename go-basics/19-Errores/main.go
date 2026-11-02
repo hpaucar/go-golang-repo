@@ -1,3 +1,27 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar el manejo de errores en Go: errores definidos como
+ *              variables (`errors.New`, `fmt.Errorf`), funciones que devuelven
+ *              `(resultado, error)` y la comprobación `if err != nil`.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "Error: ❌ Division by zero" para 10/0, "Resultado: 5" para 10/2
+ *              y "Error generado: ❌ Error genérico".
+ *
+ * Notas:
+ *    1. En Go los errores son valores que se devuelven, no excepciones; quien
+ *       llama decide qué hacer con ellos.
+ *    2. Los errores definidos como variables (errores centinela, sentinel
+ *       errors) se pueden comparar con `errors.Is(err, ErrDivisionByZero)`.
+ *    3. `fmt.Errorf` sin verbos de formato equivale a `errors.New`; su uso
+ *       típico es agregar contexto y envolver otro error con `%w`.
+ */
+
 package main
 
 import (

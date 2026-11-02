@@ -1,33 +1,29 @@
 /*
- * Archivo:     buffered_channel_sentinel.go
+ * Archivo:     bufferchannel.go
  *
- * Propósito:   Ilustrar el uso de canales con búfer (buffered channels) en Go, 
- *              combinados con una variable de control `sync.WaitGroup` y un 
- *              valor centinela (`-1`) para coordinar la terminación segura de una 
- *              goroutine receptora. El programa muestra cómo los canales con 
- *              búfer permiten enviar múltiples elementos sin bloqueo inmediato 
- *              hasta que su capacidad máxima se agota.
+ * Propósito:   Ilustrar los canales con búfer (buffered channels): `main`
+ *              envía los números 1 a 6 por un canal de capacidad 3 a un
+ *              receptor lento (1 segundo por lectura) y termina con el valor
+ *              centinela `-1`. Un `sync.WaitGroup` espera al receptor.
  *
- * Compilación: go build buffered_channel_sentinel.go
- * Ejecución:   ./buffered_channel_sentinel
- *              (Alternativamente: go run buffered_channel_sentinel.go)
+ * Compilación: go build bufferchannel.go
+ * Ejecución:   ./bufferchannel
+ *              (Alternativamente: go run bufferchannel.go)
  *
  * Entrada:     Ninguna.
- * Salida:      Mensajes impresos con marcas de tiempo (timestamps) que muestran 
- *              el estado dinámico del búfer durante el envío, la recepción 
- *              secuencial de los elementos con un retraso de 1 segundo por cada 
- *              lectura, y la finalización coordinada del programa.
+ * Salida:      Líneas con hora (HH:MM:SS): "Sending: i. Buffer Size: n" con el
+ *              número de elementos en el búfer antes de cada envío, y
+ *              "Received: i" una vez por segundo, hasta "Received: -1".
  *
- * Notas:       
- *    1. `make(chan int, 3)` crea un canal con un búfer de capacidad 3. Esto 
- *       permite que la goroutine emisora (`main`) coloque hasta 3 elementos 
- *       sin bloquearse, antes de que se requiera que el receptor libere espacio.
- *    2. Se utiliza el valor `-1` como un "valor centinela" (sentinel value) 
- *       para indicarle a la función `receiver` que el flujo de datos ha concluido 
- *       y que debe salir de su bucle de procesamiento.
- *    3. Se emplea correctamente un `sync.WaitGroup` para asegurar que el hilo 
- *       principal espere (`wGroup.Wait()`) a que el receptor llame a `Done()`, 
- *       evitando que el programa principal finalice prematuramente.
+ * Notas:
+ *    1. `make(chan int, 3)` crea un canal con búfer de capacidad 3: `main`
+ *       puede enviar sin bloquearse mientras haya espacio; cuando el búfer se
+ *       llena, el envío espera a que el receptor saque un elemento.
+ *    2. `len(msgChannel)` devuelve cuántos elementos hay en el búfer en ese
+ *       instante; así se observa cómo se llena.
+ *    3. El valor centinela `-1` indica a `receiver` que no hay más datos;
+ *       `wGroup.Wait()` evita que `main` termine antes de que el receptor
+ *       llame a `Done()`.
  */
 
 package main

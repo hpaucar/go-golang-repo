@@ -1,3 +1,31 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Simular la preparación de un pedido con tres goroutines
+ *              (hamburguesa, papas y soda), cada una con un tiempo distinto (3,
+ *              2 y 1 s). `main` usa `select` dentro de un bucle de tres
+ *              iteraciones para recibir cada ítem en el orden en que queda
+ *              listo.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "🥤 Pedido listo: Soda fría", "🍟 Pedido listo: Papas fritas" y "🍔
+ *              Pedido listo: Hamburguesa con queso", en ese orden, y luego "✅
+ *              ¡El cliente ya tiene todo su pedido!". Tarda unos 3 segundos.
+ *
+ * Notas:
+ *    1. Las tres preparaciones ocurren al mismo tiempo, así que el tiempo total
+ *       es el de la más lenta (3 s) y no la suma (6 s).
+ *    2. El bucle se repite tantas veces como mensajes se esperan, y cada
+ *       `select` recibe exactamente un mensaje.
+ *    3. Contar mensajes es una forma simple de sincronización; cuando el número
+ *       de tareas varía, se usa `sync.WaitGroup` y se cierra un canal de
+ *       resultados.
+ */
+
 package main
 
 import (

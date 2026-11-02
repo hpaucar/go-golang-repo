@@ -1,37 +1,30 @@
 /*
- * Archivo:     cond_fix_demonstration.go
+ * Archivo:     waitforonetask.go
  *
- * Propósito:   Demostrar cómo solucionar (técnicamente) el problema de la 
- *              "señal perdida" del ejemplo anterior mediante el uso correcto 
- *              del mutex asociado a la variable de condición. Este programa 
- *              fuerza un orden de ejecución estricto entre el hilo principal 
- *              y la goroutine hija.
+ * Propósito:   Corregir la señal perdida del listado anterior: `doWork`
+ *              adquiere el candado antes de llamar a `cond.Signal()`. Como
+ *              `main` tiene el candado hasta que entra en `cond.Wait()`, la
+ *              señal nunca llega antes de que `main` esté esperando.
  *
- * Compilación: go build cond_fix_demonstration.go
- * Ejecución:   ./cond_fix_demonstration
- *              (Alternativamente: go run cond_fix_demonstration.go)
+ * Compilación: go build waitforonetask.go
+ * Ejecución:   ./waitforonetask
+ *              (Alternativamente: go run waitforonetask.go)
  *
  * Entrada:     Ninguna.
- * Salida:      El programa imprimirá la secuencia de inicio y finalización 
- *              de 50,000 iteraciones de forma exitosa sin caer en interbloqueo.
+ * Salida:      La secuencia "Waiting for child goroutine", "Work started",
+ *              "Work finished", "Child goroutine finished" repetida 50 000
+ *              veces, sin interbloqueo.
  *
- * Notas:       
- *    1. El hilo principal adquiere el candado (`cond.L.Lock()`) ANTES de 
- *       lanzar la goroutine hija. Por lo tanto, cuando `doWork` intenta 
- *       adquirir el mismo candado, se bloquea (se queda esperando).
- *    2. `doWork` solo puede avanzar, adquirir el candado y ejecutar `Signal()` 
- *       una vez que el hilo principal llama a `cond.Wait()`, ya que esta 
- *       función libera internamente el candado antes de suspender al hilo.
- *    3. Esto garantiza que `cond.Signal()` jamás se ejecutará antes de que 
- *       `main` esté escuchando en `cond.Wait()`, evitando que la señal se pierda.
- *    4. ADVERTENCIA: Aunque esto evita el deadlock en este diseño específico, 
- *       sigue siendo una práctica "frágil". El estándar de la industria y la 
- *       forma más robusta de usar `sync.Cond` es acompañarlo SIEMPRE de una 
- *       variable de estado explícita (ej. `workDone boolean`) y comprobar esa 
- *       variable dentro de un bucle `for` antes del `Wait()`. Esto protege 
- *       contra los "despertares espurios" (spurious wakeups).
+ * Notas:
+ *    1. `main` bloquea `cond.L` antes de lanzar la goroutine; `doWork` se queda
+ *       esperando el candado.
+ *    2. `cond.Wait()` libera el candado de forma atómica al suspender a `main`;
+ *       solo entonces `doWork` puede adquirirlo y emitir la señal.
+ *    3. Aun así, la práctica recomendada es acompañar `sync.Cond` con una
+ *       variable de estado (por ejemplo, `done bool`) y comprobarla en un bucle
+ *       `for` antes de `Wait()`.
  */
- 
+
 package main
 
 import (

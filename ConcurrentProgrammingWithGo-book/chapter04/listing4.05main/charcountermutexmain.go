@@ -1,3 +1,28 @@
+/*
+ * Archivo:     charcountermutexmain.go
+ *
+ * Propósito:   Contar las letras de los RFC 1000 a 1030 con una goroutine por
+ *              documento, usando `listing4_5.CountLetters`, que bloquea el
+ *              mutex solo durante el conteo. Las descargas se solapan y el
+ *              programa es mucho más rápido que la versión con el candado mal
+ *              ubicado.
+ *
+ * Compilación: go build charcountermutexmain.go
+ * Ejecución:   ./charcountermutexmain
+ *              (Alternativamente: go run charcountermutexmain.go)
+ *
+ * Entrada:     Ninguna por teclado. Requiere conexión a Internet (31 peticiones
+ *              HTTP).
+ * Salida:      Líneas "Completed: <url> HH:MM:SS" en orden no determinista y,
+ *              tras 10 segundos, las frecuencias "a-N ... z-N".
+ *
+ * Notas:
+ *    1. El mismo mutex protege la escritura en las goroutines y la lectura
+ *       final en `main`.
+ *    2. La espera fija de 10 segundos no garantiza que todas las descargas
+ *       hayan terminado; en el capítulo 6 se usa `sync.WaitGroup`.
+ */
+
 package main
 
 import (

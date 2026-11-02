@@ -1,3 +1,33 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Simular un sistema de envío masivo de correos con un grupo de
+ *              trabajadores (worker pool). Tres workers procesan 10 emails
+ *              desde un canal; cada envío tarda entre 0,5 y 2,5 s y falla con
+ *              un 10 % de probabilidad. Un `sync.WaitGroup` indica cuándo
+ *              cerrar el canal de resultados.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Mensajes de procesamiento de cada worker, el resultado de cada
+ *              email con su tiempo y unas estadísticas finales: emails exitosos
+ *              y fallidos, tiempo promedio y tasa de éxito. Los tiempos, el
+ *              orden y los fallos cambian en cada ejecución.
+ *
+ * Notas:
+ *    1. Una goroutine aparte llama a `wg.Wait()` y luego a
+ *       `close(resultadosChannel)`; así `main` puede recorrer los resultados
+ *       con `for range` sin bloquearse para siempre.
+ *    2. `wg.Add(1)` se llama antes de lanzar cada goroutine, y cada worker
+ *       llama a `defer wg.Done()`; hacer `Add` dentro de la goroutine
+ *       provocaría una condición de carrera con `Wait`.
+ *    3. Varios workers recorren el mismo canal con `range`; cada email lo
+ *       recibe un solo worker, y así la carga se reparte automáticamente.
+ */
+
 package main
 
 import (

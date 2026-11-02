@@ -1,3 +1,30 @@
+/*
+ * Archivo:     extractwordsmulti.go
+ *
+ * Propósito:   Ilustrar el patrón fan-out/fan-in: 20 goroutines
+ *              `downloadPages` leen del mismo canal de URL (fan-out) y
+ *              `listing9_10.FanIn` une sus salidas en un solo canal (fan-in)
+ *              antes de extraer las palabras.
+ *
+ * Compilación: go build extractwordsmulti.go
+ * Ejecución:   ./extractwordsmulti
+ *              (Alternativamente: go run extractwordsmulti.go)
+ *
+ * Entrada:     Red: descarga los RFC 100 a 130 desde
+ *              https://rfc-editor.org/rfc/rfc<N>.txt.
+ * Salida:      Todas las palabras de los documentos en minúsculas, una por
+ *              línea; el orden de los documentos varía en cada ejecución.
+ *
+ * Notas:
+ *    1. Varias goroutines pueden leer del mismo canal; cada URL la recibe
+ *       solo una de ellas, así las descargas se reparten.
+ *    2. `FanIn` (listing9.10) une varios canales en uno y lo cierra cuando
+ *       todos los de entrada se cierran.
+ *    3. La ruta de importación usa `chapter9/...`, pero la carpeta real es
+ *       `chapter09/`; tal como está, `go build` falla con "no required module
+ *       provides package". Hay que corregir la ruta para compilar.
+ */
+
 package main
 
 import (

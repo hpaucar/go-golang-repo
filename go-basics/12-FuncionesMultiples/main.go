@@ -1,3 +1,31 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar funciones que devuelven varios valores (`calcular`
+ *              devuelve suma, resta, multiplicación y división) y funciones con
+ *              retorno nombrado (`exponenciar`). También muestra el
+ *              identificador en blanco `_` para ignorar valores de retorno.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Para 10 y 5: suma 15.0, resta 5.0, multiplicación 50.0 y
+ *              división 2.0; luego algunos de esos valores por separado y "2
+ *              elevado a 3 es: 8.0".
+ *
+ * Notas:
+ *    1. Go exige recibir todos los valores de retorno; los que no interesan se
+ *       descartan con `_`.
+ *    2. Con un retorno nombrado, `resultado` ya está declarada y un `return`
+ *       sin valores la devuelve. Conviene usarlo solo en funciones cortas.
+ *    3. `calcular` devuelve 0 como división cuando `b` es 0, y `exponenciar`
+ *       solo funciona con exponentes enteros no negativos (convierte `b` a
+ *       `int`). En código real, la división por cero se informaría con un
+ *       `error`.
+ */
+
 package main
 
 import "fmt"

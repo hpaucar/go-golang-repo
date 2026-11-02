@@ -1,3 +1,32 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar la diferencia entre bytes y runas (runes) en las cadenas
+ *              UTF-8. Compara la longitud en bytes (`len`) con el número de
+ *              caracteres (`utf8.RuneCountInString`) y recorre una cadena en
+ *              chino por bytes y por runas con `range`.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      La longitud 5 de "Hello", 6 bytes y 2 runas para "你好", seis
+ *              caracteres sin sentido al recorrer "你好" byte por byte, cada runa
+ *              con su código Unicode (U+4F60 y U+597D) y los códigos 20320 y
+ *              241 de '你' y 'ñ'.
+ *
+ * Notas:
+ *    1. Una cadena en Go es una secuencia de bytes; `s[i]` devuelve un byte, no
+ *       un carácter. Por eso el recorrido por índice muestra caracteres
+ *       extraños.
+ *    2. `for idx, valor := range s` decodifica UTF-8: `valor` es una runa e
+ *       `idx` es la posición en bytes donde empieza (0 y 3).
+ *    3. `rune` es un alias de `int32` y guarda un punto de código Unicode. Las
+ *       etiquetas impresas dicen "saludoEspanol", pero la constante se llama
+ *       `saludoIngles`.
+ */
+
 package main
 
 import (

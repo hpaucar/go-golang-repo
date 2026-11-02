@@ -1,3 +1,29 @@
+/*
+ * Archivo:     ledgermutexorder.go
+ *
+ * Propósito:   Corregir el deadlock del libro contable (11.05) aplicando un
+ *              orden fijo de bloqueo. `Transfer` ordena las dos cuentas por
+ *              su `id` con `sort.Slice` y bloquea siempre primero la de
+ *              menor `id`, sin importar cuál es el origen o el destino.
+ *
+ * Compilación: go build ledgermutexorder.go
+ * Ejecución:   ./ledgermutexorder
+ *              (Alternativamente: go run ledgermutexorder.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Mensajes "Locking" y "Unlocked" de los cuatro cajeros y un
+ *              "COMPLETE" por cada uno. El programa termina a los 60
+ *              segundos aunque el trabajo acabe antes.
+ *
+ * Notas:
+ *    1. Con un orden global (aquí, alfabético por nombre) no puede formarse
+ *       un ciclo de espera entre cajeros.
+ *    2. El orden de desbloqueo no importa para evitar el deadlock; solo
+ *       importa el orden de bloqueo.
+ *    3. Esta técnica exige conocer de antemano todos los recursos que se van
+ *       a bloquear, lo que no siempre es posible.
+ */
+
 package main
 
 import (

@@ -1,3 +1,26 @@
+/*
+ * Archivo:     simplenodeadlockorder.go
+ *
+ * Propósito:   Corregir el deadlock de 11.01_02 con un orden fijo de
+ *              bloqueo: ahora `red` y `blue` adquieren siempre `lock1`
+ *              primero y `lock2` después, así no puede haber espera circular.
+ *
+ * Compilación: go build simplenodeadlockorder.go
+ * Ejecución:   ./simplenodeadlockorder
+ *              (Alternativamente: go run simplenodeadlockorder.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Mensajes de `Red` y `Blue` que adquieren y liberan los locks
+ *              sin detenerse durante 20 segundos; después `main` imprime
+ *              "Done" y el programa termina.
+ *
+ * Notas:
+ *    1. Ordenar los recursos y bloquearlos siempre en ese orden elimina la
+ *       condición de espera circular de Coffman.
+ *    2. El programa genera muchísima salida; conviene redirigirla, por
+ *       ejemplo con `| tail`, para ver el final.
+ */
+
 package main
 
 import (

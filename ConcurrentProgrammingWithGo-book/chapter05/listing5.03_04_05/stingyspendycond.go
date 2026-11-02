@@ -1,37 +1,33 @@
 /*
- * Archivo:     stingy_spendy_cond.go
+ * Archivo:     stingyspendycond.go
  *
- * Propósito:   Ilustrar la sincronización avanzada de memoria compartida en
- *              Go utilizando Variables de Condición (sync.Cond) junto con 
- *              Mutexes. Este programa mejora una versión anterior eliminando 
- *              la "espera activa" (busy-waiting). La goroutine "spendy" 
- *              ahora se suspende de forma eficiente hasta que "stingy" 
- *              deposita fondos suficientes y emite una señal.
+ * Propósito:   Ilustrar las variables de condición (`sync.Cond`) junto con un
+ *              mutex. Esta versión elimina el sondeo del listado anterior:
+ *              `spendy` se suspende con `cond.Wait()` hasta que `stingy`
+ *              deposita fondos y emite `cond.Signal()`.
  *
- * Compilación: go build stingy_spendy_cond.go
- * Ejecución:   ./stingy_spendy_cond
- *              (Alternativamente: go run stingy_spendy_cond.go)
+ * Compilación: go build stingyspendycond.go
+ * Ejecución:   ./stingyspendycond
+ *              (Alternativamente: go run stingyspendycond.go)
  *
  * Entrada:     Ninguna.
- * Salida:      Mensajes de confirmación cuando cada goroutine termina su 
- *              ejecución y el saldo final de la cuenta bancaria. Si ocurre 
- *              un error lógico, imprimirá "Money is negative!".
+ * Salida:      "Stingy Done", "Spendy Done" y el saldo final (100 si ambas
+ *              goroutines terminan en 2 segundos). Si hubiera un error lógico,
+ *              se imprimiría "Money is negative!".
  *
- * Notas:       
- *    1. `cond.Wait()` libera automáticamente el candado (lock) subyacente y 
- *       suspende la ejecución de la goroutine "spendy". Al ser despertada, 
- *       vuelve a adquirir el candado antes de continuar. Esto es mucho más 
- *       eficiente para el uso de la CPU que el bucle con `time.Sleep`.
- *    2. `cond.Signal()` se utiliza en la función "stingy" para notificar y 
- *       despertar a una goroutine que esté esperando en `cond.Wait()`.
- *    3. La comprobación `for *money < 50` alrededor del `Wait()` previene 
- *       despertares espurios (spurious wakeups), lo cual es una práctica 
- *       estándar y crítica al usar variables de condición.
- *    4. Al igual que en la versión anterior, la función `main` utiliza 
- *       `time.Sleep` de forma rudimentaria para esperar la finalización. 
- *       Un `sync.WaitGroup` sería el enfoque idiomático adecuado en Go.
+ * Notas:
+ *    1. `cond.Wait()` libera el candado y suspende la goroutine; al despertar,
+ *       vuelve a adquirir el candado antes de continuar. Así no se gasta CPU
+ *       esperando.
+ *    2. `cond.Signal()` despierta a una goroutine que espera en `cond.Wait()`;
+ *       si nadie espera, la señal simplemente se ignora.
+ *    3. La comprobación `for *money < 50` alrededor de `Wait()` es obligatoria:
+ *       un depósito de 10 no siempre basta y la condición debe revisarse al
+ *       despertar.
+ *    4. `main` sigue usando `time.Sleep` para esperar; `sync.WaitGroup` sería
+ *       la forma idiomática.
  */
- 
+
 package main
 
 import (

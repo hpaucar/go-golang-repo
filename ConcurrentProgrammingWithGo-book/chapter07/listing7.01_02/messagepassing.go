@@ -1,33 +1,29 @@
 /*
- * Archivo:     channel_sentinel_string.go
+ * Archivo:     messagepassing.go
  *
- * Propósito:   Ilustrar un patrón productor-consumidor clásico utilizando 
- *              un canal sin búfer y una cadena de texto como valor centinela 
- *              ("STOP") para controlar la finalización controlada de la goroutine 
- *              receptora.
+ * Propósito:   Ilustrar el paso de mensajes (message passing) entre goroutines
+ *              con un canal sin búfer. La goroutine `receiver` lee e imprime
+ *              mensajes hasta recibir el valor centinela "STOP".
  *
- * Compilación: go build channel_sentinel_string.go
- * Ejecución:   ./channel_sentinel_string
- *              (Alternativamente: go run channel_sentinel_string.go)
+ * Compilación: go build messagepassing.go
+ * Ejecución:   ./messagepassing
+ *              (Alternativamente: go run messagepassing.go)
  *
  * Entrada:     Ninguna.
- * Salida:      El hilo principal envía secuencialmente "HELLO", "THERE" y 
- *              "STOP", los cuales son recibidos e impresos por el receptor. 
- *              Al cumplirse la condición del centinela, el receptor sale de 
- *              su bucle y finaliza. El último envío ("STOP2") nunca llega a 
- *              leerse.
+ * Salida:      Imprime "Sending HELLO...", "Sending THERE..." y "Sending
+ *              STOP..." junto con los mensajes recibidos. Después de "STOP"
+ *              el receptor termina, el envío final de "STOP2" no tiene
+ *              receptor y el programa aborta con "fatal error: all goroutines
+ *              are asleep - deadlock!".
  *
- * Notas:       
- *    1. Dado que se trata de un canal sin búfer, cada operación de envío 
- *       bloquea al hilo principal hasta que la goroutine receptora lee el valor, 
- *       garantizando un orden estricto de paso de mensajes.
- *    2. La función `receiver` evalúa la condición `msg != "STOP"` antes de 
- *       cada lectura. Una vez que procesa el mensaje "STOP", el bucle termina 
- *       y la función concluye su ejecución.
- *    3. Cualquier valor enviado al canal *después* de que el receptor haya 
- *       salido de su bucle (como "STOP2" en este código) provocará que el hilo 
- *       principal se quede bloqueado indefinidamente, ya que no habrá ningún 
- *       receptor activo esperando dicho dato.
+ * Notas:
+ *    1. En un canal sin búfer, cada envío bloquea a `main` hasta que la
+ *       goroutine receptora lee el valor; así se garantiza el orden de los
+ *       mensajes.
+ *    2. `receiver` sale de su bucle cuando lee "STOP" (valor centinela).
+ *    3. El envío de "STOP2" se hace sin ningún receptor activo: `main` queda
+ *       bloqueada para siempre y el runtime de Go detecta el interbloqueo
+ *       (deadlock). El ejemplo muestra este error a propósito.
  */
 
 package main

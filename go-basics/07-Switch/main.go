@@ -1,3 +1,30 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar la sentencia `switch` en tres formas: sobre el valor de
+ *              una variable, con varios valores en un mismo `case` (día de la
+ *              semana con `time.Now().Weekday()`) y sin expresión, como
+ *              alternativa a una cadena de `if`/`else`.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna (usa la fecha y la hora del sistema).
+ * Salida:      "Tres" para el número 3; luego si es fin de semana o día de
+ *              semana, la hora actual y un saludo ("Buenos días" antes de las
+ *              12 y "Buenas tardes" después). La salida cambia según el día y
+ *              la hora.
+ *
+ * Notas:
+ *    1. En Go cada `case` termina solo; no hace falta `break`. Para pasar al
+ *       caso siguiente se usa `fallthrough`.
+ *    2. Un `case` puede listar varios valores separados por comas (`case
+ *       time.Saturday, time.Sunday:`).
+ *    3. Un `switch` sin expresión evalúa cada `case` como una condición
+ *       booleana, de arriba hacia abajo.
+ */
+
 package main
 
 import (

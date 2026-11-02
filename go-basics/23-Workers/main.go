@@ -1,3 +1,31 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar el patrón de grupo de trabajadores (worker pool). Tres
+ *              goroutines `worker` leen tareas de un canal con búfer, simulan 3
+ *              s de trabajo por tarea y envían el doble del número a un canal
+ *              de resultados que `main` recoge.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Diez mensajes "📥 Tarea N enviada al canal", los mensajes de
+ *              inicio y fin de cada worker y diez resultados (el doble de cada
+ *              tarea, en orden variable). Con 3 workers y 10 tareas tarda unos
+ *              12 segundos (4 rondas de 3 s).
+ *
+ * Notas:
+ *    1. `for tarea := range tareasChannel` termina cuando el canal se cierra y
+ *       queda vacío; por eso `main` llama a `close(tareasChannel)`.
+ *    2. Los canales con búfer de tamaño `numTareas` permiten enviar todas las
+ *       tareas sin esperar a los workers.
+ *    3. `main` sabe cuándo terminar porque recibe exactamente `numTareas`
+ *       resultados; no espera a que los workers salgan de su bucle. Para eso se
+ *       usa `sync.WaitGroup`, como en el ejercicio 23.1.
+ */
+
 package main
 
 import (

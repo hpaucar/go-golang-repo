@@ -1,10 +1,31 @@
 /*
- * Simula depósitos y retiros concurrentes sobre un saldo compartido, 
- * cediendo la ejecución con runtime.Gosched() después de cada operación.
- * Ilustra que ceder la ejecución no evita la carrera de datos y que una 
- * espera fija no garantiza que ambas goroutines terminen.
- * "runtime.Gosched()": Puedo continuar, pero cedo mi turno para que otras tareas tengan oportunidad de avanzar
+ * Archivo:     stingyspendysched.go
+ *
+ * Propósito:   Repetir la simulación de depósitos y retiros concurrentes, pero
+ *              llamando a `runtime.Gosched()` después de cada operación.
+ *              Ilustra que ceder el turno al planificador no evita la condición
+ *              de carrera, solo cambia la forma en que se intercalan las
+ *              goroutines.
+ *
+ * Compilación: go build stingyspendysched.go
+ * Ejecución:   ./stingyspendysched
+ *              (Alternativamente: go run stingyspendysched.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      El saldo final tras 2 segundos, normalmente distinto de 100.
+ *              Como cada iteración cede el procesador, las goroutines van más
+ *              lentas y puede que "Stingy Done" o "Spendy Done" no aparezcan
+ *              antes de que termine `main`.
+ *
+ * Notas:
+ *    1. `runtime.Gosched()` significa "puedo continuar, pero cedo mi turno para
+ *       que otras goroutines avancen". No ofrece exclusión mutua.
+ *    2. Con varios núcleos las dos goroutines se ejecutan en paralelo, así que
+ *       la carrera sigue presente; `go run -race` la detecta.
+ *    3. La espera fija de 2 segundos no garantiza la finalización de las
+ *       goroutines.
  */
+
 package main
 
 import (

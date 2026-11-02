@@ -1,3 +1,30 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar cómo aplicar un tiempo límite (timeout) al esperar una
+ *              respuesta, con `select` y `time.After`. Hay dos ejercicios: una
+ *              "API" simulada que tarda 3 s (supera el límite de 2 s) y otra
+ *              que tarda 1 s (responde a tiempo).
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      En el ejercicio 1, "⏰ Timeout: La API no respondió" después de 2
+ *              s; en el ejercicio 2, "✅ Datos recibidos: Datos de la API"
+ *              después de 1 s más.
+ *
+ * Notas:
+ *    1. `select` toma el primer caso que esté listo: la respuesta o el canal de
+ *       `time.After`.
+ *    2. En el ejercicio 1, la goroutine que responde tarde queda bloqueada para
+ *       siempre al enviar en `respuesta1`, porque nadie recibe (goroutine
+ *       leak). Un canal con búfer de tamaño 1 evitaría ese bloqueo.
+ *    3. En programas reales se usa `context.WithTimeout`, que además permite
+ *       cancelar la operación en curso.
+ */
+
 package main
 
 import (

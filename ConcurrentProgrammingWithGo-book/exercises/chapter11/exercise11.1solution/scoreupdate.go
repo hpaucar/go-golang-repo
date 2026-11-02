@@ -1,3 +1,28 @@
+/*
+ * Archivo:     scoreupdate.go
+ *
+ * Propósito:   Solución del ejercicio 11.1 del libro *Learn Concurrent
+ *              Programming with Go*: elimina el interbloqueo (deadlock)
+ *              ordenando los jugadores por nombre con `sort.Slice` antes de
+ *              tomar sus mutex. Así todas las goroutines bloquean los recursos
+ *              en el mismo orden global.
+ *
+ * Compilación: go build scoreupdate.go
+ * Ejecución:   ./scoreupdate
+ *              (Alternativamente: go run scoreupdate.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      El puntaje final de cada uno de los 6 jugadores. La suma de los
+ *              puntajes cambia en cada ejecución, pero el programa siempre
+ *              termina.
+ *
+ * Notas:
+ *    1. Ordenar los recursos rompe la condición de espera circular, una de las
+ *       cuatro condiciones de Coffman.
+ *    2. Cada goroutine recibe una copia del sub-slice, por lo que ordenarlo no
+ *       afecta al slice `players` de `main`.
+ */
+
 package main
 
 import (

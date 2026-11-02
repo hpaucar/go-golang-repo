@@ -1,7 +1,33 @@
-// Ejemplo para observar la intercalación de dos goroutines.
-//
-// Cada goroutine intenta incrementar diez veces la variable compartida n.
-// Si los incrementos fueran correctamente sincronizados, el resultado sería 20.
+/*
+ * Archivo:     contador.go
+ *
+ * Propósito:   Observar la intercalación (interleaving) de dos goroutines. Cada
+ *              una incrementa diez veces la variable global `n` en dos pasos
+ *              (leer y luego escribir), con pausas aleatorias muy cortas entre
+ *              ellos. Si los incrementos estuvieran sincronizados, el resultado
+ *              sería 20.
+ *
+ * Compilación: go build contador.go
+ * Ejecución:   ./contador
+ *              (Alternativamente: go run contador.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "El valor de n es X", con X entre 10 y 20. El valor cambia en
+ *              cada ejecución; un valor menor que 20 muestra actualizaciones
+ *              perdidas (lost updates).
+ *
+ * Notas:
+ *    1. Cuando una goroutine lee `n`, se detiene y la otra escribe, la primera
+ *       sobrescribe después ese incremento con un valor desactualizado.
+ *    2. Las pausas de 50 a 99 nanosegundos son muy cortas; a veces no provocan
+ *       un cambio de goroutine y el resultado es 20. Con pausas más largas, la
+ *       pérdida se ve con más frecuencia.
+ *    3. `go run -race contador.go` detecta la condición de carrera. Para un
+ *       resultado correcto se protege el incremento con `sync.Mutex` o se usa
+ *       `sync/atomic`, y se espera a las goroutines con `sync.WaitGroup` en
+ *       lugar de `time.Sleep`.
+ */
+
 package main
 
 import (

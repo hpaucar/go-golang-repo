@@ -1,3 +1,28 @@
+/*
+ * Archivo:     readwritemain.go
+ *
+ * Propósito:   Probar el `ReadWriteMutex` del listado 4.12: diez goroutines
+ *              adquieren el candado de lectura a la vez y lo mantienen 5
+ *              segundos. Un segundo después, `main` pide el candado de
+ *              escritura y debe esperar a que terminen todos los lectores.
+ *
+ * Compilación: go build readwritemain.go
+ * Ejecución:   ./readwritemain
+ *              (Alternativamente: go run readwritemain.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Diez "Read started", luego "Write started"; unos 4 segundos
+ *              después, diez "Read done" y finalmente "Write finished".
+ *
+ * Notas:
+ *    1. Los lectores trabajan en paralelo, lo que demuestra que el candado de
+ *       lectura es compartido.
+ *    2. El escritor queda bloqueado hasta que el último lector llama a
+ *       `ReadUnlock()`.
+ *    3. `main` no llama a `WriteUnlock()` porque el programa termina justo
+ *       después.
+ */
+
 package main
 
 import (

@@ -1,3 +1,31 @@
+/*
+ * Archivo:     ledgermutexarb.go
+ *
+ * Propósito:   Evitar el deadlock del libro contable con un árbitro. En
+ *              lugar de un mutex por cuenta, el `Arbitrator` lleva un mapa
+ *              de cuentas en uso protegido por un `sync.Cond`: un cajero
+ *              reserva todas las cuentas que necesita de una sola vez o
+ *              espera (`cond.Wait`) hasta que estén libres.
+ *
+ * Compilación: go build ledgermutexarb.go
+ * Ejecución:   ./ledgermutexarb
+ *              (Alternativamente: go run ledgermutexarb.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Mensajes "Locking" y "Unlocked" de los cuatro cajeros y,
+ *              al final, "COMPLETE" para cada uno. El programa termina a los
+ *              60 segundos aunque el trabajo acabe antes.
+ *
+ * Notas:
+ *    1. Se rompe la condición de retención y espera (hold and wait): nadie
+ *       retiene una cuenta mientras espera otra.
+ *    2. `UnlockAccounts` usa `cond.Broadcast()` para despertar a todos los
+ *       cajeros en espera, que vuelven a comprobar si sus cuentas quedaron
+ *       libres.
+ *    3. El costo es menos concurrencia: todas las reservas pasan por el
+ *       mismo mutex del árbitro.
+ */
+
 package main
 
 import (

@@ -1,31 +1,25 @@
 /*
- * Archivo:     concurrent_factorization.go
+ * Archivo:     collectresults.go
  *
- * Propósito:   Ilustrar el uso de goroutines y canales para ejecutar 
- *              tareas independientes y pesadas de forma concurrente (en este caso, 
- *              el cálculo de los factores enteros de grandes números). 
- *              Demuestra cómo una goroutine en segundo plano calcula 
- *              factores mientras el hilo principal realiza otra tarea 
- *              simultánea antes de recoger el resultado.
+ * Propósito:   Ilustrar cómo obtener el resultado de una goroutine mediante un
+ *              canal: una goroutine calcula los divisores de 3419110721
+ *              mientras `main` calcula los de 4033836233 al mismo tiempo.
  *
- * Compilación: go build concurrent_factorization.go
- * Ejecución:   ./concurrent_factorization
- *              (Alternativamente: go run concurrent_factorization.go)
+ * Compilación: go build collectresults.go
+ * Ejecución:   ./collectresults
+ *              (Alternativamente: go run collectresults.go)
  *
- * Entrada:     Ninguna. (Los números de prueba están codificados internamente).
- * Salida:      Imprime en la consola las listas de factores enteros 
- *              correspondientes a ambos números calculados.
+ * Entrada:     Ninguna (los números están fijos en el código).
+ * Salida:      Dos líneas con los divisores de 4033836233 y de 3419110721
+ *              (en ese orden). Puede tardar varios segundos.
  *
- * Notas:       
- *    1. La función `findFactors` implementa un algoritmo secuencial básico 
- *       que busca divisores desde 1 hasta el número dado mediante fuerza bruta.
- *    2. Se utiliza un canal sin búfer (`resultCh`) para comunicar el resultado 
- *       desde la goroutine anónima hacia el hilo principal, sincronizando 
- *       la lectura (`<-resultCh`) hasta que el cálculo finaliza.
- *    3. Mientras la goroutine calcula los factores de `3419110721` en segundo plano, 
- *       el hilo principal procede a calcular y mostrar de manera independiente 
- *       los factores de `4033836233`, ilustrando la ejecución concurrente 
- *       de tareas CPU-bound.
+ * Notas:
+ *    1. `findFactors` busca divisores por fuerza bruta, de 1 a n: es una
+ *       tarea intensiva en CPU (CPU-bound).
+ *    2. El canal sin búfer `resultCh` lleva el resultado de la goroutine a
+ *       `main`; `<-resultCh` espera hasta que el cálculo termine.
+ *    3. Los dos cálculos corren en paralelo si hay más de un núcleo, así que
+ *       el tiempo total es cercano al del cálculo más largo, no a la suma.
  */
 
 package main

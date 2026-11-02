@@ -1,3 +1,29 @@
+/*
+ * Archivo:     weightedsemaphore.go
+ *
+ * Propósito:   Solución del ejercicio 5.3 del libro *Learn Concurrent
+ *              Programming with Go*, que pide un semáforo ponderado (weighted
+ *              semaphore) donde `Acquire` y `Release` toman o devuelven varios
+ *              permisos a la vez. Se implementa con un contador y una
+ *              `sync.Cond`.
+ *
+ * Compilación: go build weightedsemaphore.go
+ * Ejecución:   ./weightedsemaphore
+ *              (Alternativamente: go run weightedsemaphore.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      El hilo padre A toma los 2 permisos; los hijos B y C quedan
+ *              bloqueados 3 segundos hasta que A los libera, y luego cada uno
+ *              toma, usa y libera 1 permiso.
+ *
+ * Notas:
+ *    1. `Acquire(n)` espera mientras `permits - n < 0`, es decir, hasta que
+ *       haya suficientes permisos.
+ *    2. `Release` usa `Broadcast` porque varias goroutines pueden esperar
+ *       cantidades distintas de permisos.
+ *    3. Para uso real existe `golang.org/x/sync/semaphore.Weighted`.
+ */
+
 package main
 
 import (

@@ -1,3 +1,27 @@
+/*
+ * Archivo:     releasebeforeacquire.go
+ *
+ * Propósito:   Resolver el problema de la señal perdida con un semáforo: `main`
+ *              lanza 50 000 goroutines, una tras otra, y espera a cada una con
+ *              `Acquire()` sobre un semáforo iniciado en 0. Cada goroutine
+ *              termina con `Release()`.
+ *
+ * Compilación: go build releasebeforeacquire.go
+ * Ejecución:   ./releasebeforeacquire
+ *              (Alternativamente: go run releasebeforeacquire.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      50 000 repeticiones de "Waiting for child goroutine", "Work
+ *              started", "Work finished" y "Child goroutine finished", sin
+ *              interbloqueo.
+ *
+ * Notas:
+ *    1. Si `Release()` ocurre antes de `Acquire()`, el permiso queda guardado y
+ *       `Acquire()` no se bloquea; no se pierde ninguna señal.
+ *    2. Compare con el listado 5.6, donde `Signal()` antes de `Wait()` producía
+ *       un deadlock.
+ */
+
 package main
 
 import (

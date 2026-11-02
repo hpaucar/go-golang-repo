@@ -1,3 +1,30 @@
+/*
+ * Archivo:     longestwords.go
+ *
+ * Propósito:   Ilustrar una etapa final que necesita todos los datos antes de
+ *              responder: tras el pipeline fan-out/fan-in de listing9.09_11,
+ *              `longestWords` guarda las palabras únicas, las ordena por
+ *              longitud y envía las 10 más largas.
+ *
+ * Compilación: go build longestwords.go
+ * Ejecución:   ./longestwords
+ *              (Alternativamente: go run longestwords.go)
+ *
+ * Entrada:     Red: descarga los RFC 100 a 130 desde
+ *              https://rfc-editor.org/rfc/rfc<N>.txt.
+ * Salida:      Una línea "Longest Words: ..." con las 10 palabras únicas más
+ *              largas, separadas por comas.
+ *
+ * Notas:
+ *    1. `longestWords` solo envía su resultado cuando su canal de entrada se
+ *       cierra, es decir, cuando todo el pipeline terminó.
+ *    2. `sort.Slice` no es estable: entre palabras de la misma longitud el
+ *       orden puede cambiar en cada ejecución.
+ *    3. La ruta de importación usa `chapter9/...`, pero la carpeta real es
+ *       `chapter09/`; tal como está, `go build` falla con "no required module
+ *       provides package". Hay que corregir la ruta para compilar.
+ */
+
 package main
 
 import (

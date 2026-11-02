@@ -1,44 +1,30 @@
-
-
-
-
-
-
-
-
-
 /*
- * Archivo:     unbuffered_channel_close.go
+ * Archivo:     closing.go
  *
- * Propósito:   Ilustrar el cierre de un canal sin búfer en Go mediante la 
- *              función `close()` y analizar el comportamiento de una goroutine 
- *              receptora cuando lee de un canal cerrado sin utilizar una 
- *              comprobación de estado (comma-ok) o un bucle `range`.
+ * Propósito:   Ilustrar el cierre de un canal con `close()` y lo que ve un
+ *              receptor que lee de un canal cerrado sin comprobarlo: no se
+ *              bloquea y recibe el valor cero del tipo.
  *
- * Compilación: go build unbuffered_channel_close.go
- * Ejecución:   ./unbuffered_channel_close
- *              (Alternativamente: go run unbuffered_channel_close.go)
+ * Compilación: go build closing.go
+ * Ejecución:   ./closing
+ *              (Alternativamente: go run closing.go)
  *
  * Entrada:     Ninguna.
- * Salida:      Mensajes con marcas de tiempo que muestran el envío y la 
- *              recepción secuencial de los enteros 1, 2 y 3. Luego de que 
- *              el hilo principal cierra el canal, el receptor continuará 
- *              imprimiendo el valor cero (`Received: 0`) indefinidamente.
+ * Salida:      Líneas con hora (HH:MM:SS) con "Sending: i" y "Received: i"
+ *              para 1, 2 y 3. Después del cierre, el receptor imprime
+ *              "Received: 0" una vez por segundo (unas 3 veces) hasta que
+ *              `main` termina.
  *
- * Notas:       
- *    1. `close(msgChannel)` indica formalmente que no se enviarán más valores 
- *       a través del canal. Las operaciones de lectura en un canal cerrado 
- *       nunca se bloquean; en su lugar, devuelven de inmediato el valor cero 
- *       del tipo de datos subyacente (`0` para `int`).
- *    2. En este ejemplo, la función `receiver` realiza una lectura simple 
- *       `msg := <-messages` dentro de un bucle infinito `for`, por lo que 
- *       no puede detectar cuándo el canal ha sido cerrado.
- *    3. Para un código de producción robusto, se debe verificar el cierre 
- *       utilizando el idiom `msg, ok := <-messages` o recorrer el canal 
- *       directamente con un bucle `for msg := range messages`.
- *    4. La llamada a `time.Sleep(3 * time.Second)` al final de `main` otorga 
- *       tiempo suficiente para que la goroutine receptora procese los datos 
- *       antes de que el programa finalice.
+ * Notas:
+ *    1. `close(msgChannel)` indica que no se enviarán más valores. Leer de un
+ *       canal cerrado nunca bloquea: devuelve de inmediato el valor cero del
+ *       tipo (`0` para `int`).
+ *    2. `receiver` hace `msg := <-messages` en un bucle infinito, por eso no
+ *       distingue un 0 real del cierre del canal.
+ *    3. Para detectar el cierre se usa `msg, ok := <-messages` o
+ *       `for msg := range messages` (ver listing7.10 y listing7.11).
+ *    4. El `time.Sleep(3 * time.Second)` final solo mantiene vivo el programa
+ *       para observar este efecto.
  */
 
 package main

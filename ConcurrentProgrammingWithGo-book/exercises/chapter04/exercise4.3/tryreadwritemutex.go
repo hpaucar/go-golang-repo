@@ -1,3 +1,30 @@
+/*
+ * Archivo:     tryreadwritemutex.go
+ *
+ * Propósito:   Solución del ejercicio 4.3 del libro *Learn Concurrent
+ *              Programming with Go*, que pide agregar `TryReadLock()` al mutex
+ *              de lectores-escritor. El método intenta tomar `readersLock` y,
+ *              si es el primer lector, también `globalLock`, sin bloquearse.
+ *              `main` prueba ambos métodos.
+ *
+ * Compilación: go build tryreadwritemutex.go
+ * Ejecución:   ./tryreadwritemutex
+ *              (Alternativamente: go run tryreadwritemutex.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Mensajes que muestran el resultado de cada intento: con dos
+ *              lectores activos, `TryReadLock` da `true` y `TryWriteLock` da
+ *              `false`; tras liberar los tres bloqueos de lectura,
+ *              `TryWriteLock` da `true` y `TryReadLock` da `false`.
+ *
+ * Notas:
+ *    1. `main` llama tres veces a `ReadUnlock` porque el `TryReadLock` exitoso
+ *       también cuenta como lector.
+ *    2. Si `readersLock` está ocupado en ese momento, `TryReadLock` devuelve
+ *       `false` aunque no haya un escritor; es un fallo "espurio" aceptable en
+ *       una operación Try.
+ */
+
 package main
 
 import (

@@ -1,3 +1,28 @@
+/*
+ * Archivo:     matchmonitor.go
+ *
+ * Propósito:   Simular un servidor de resultados deportivos: `matchRecorder`
+ *              agrega un evento cada 200 ms y 5000 goroutines `clientHandler`
+ *              copian 100 veces la lista completa de eventos. Todo se protege
+ *              con un `sync.Mutex`, de modo que incluso las lecturas se
+ *              ejecutan una a la vez.
+ *
+ * Compilación: go build matchmonitor.go
+ * Ejecución:   ./matchmonitor
+ *              (Alternativamente: go run matchmonitor.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Muchas líneas "N events copied in <tiempo>" y, de vez en cuando,
+ *              "Appended match event". El programa dura 100 segundos.
+ *
+ * Notas:
+ *    1. Con un mutex normal, los lectores se excluyen entre sí aunque no
+ *       modifiquen los datos; el tiempo acumulado muestra el costo.
+ *    2. Compare los tiempos con matchmonitorrw.go, que usa `sync.RWMutex` y
+ *       permite lectores simultáneos.
+ *    3. `matchRecorder` es un bucle infinito; termina solo cuando acaba `main`.
+ */
+
 package main
 
 import (

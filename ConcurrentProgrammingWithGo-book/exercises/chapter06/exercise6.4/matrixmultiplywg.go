@@ -1,3 +1,27 @@
+/*
+ * Archivo:     matrixmultiplywg.go
+ *
+ * Propósito:   Solución del ejercicio 6.4 del libro *Learn Concurrent
+ *              Programming with Go*, que pide reemplazar la barrera de la
+ *              multiplicación de matrices por un `sync.WaitGroup`: en cada
+ *              ronda se lanza una goroutine por fila y `main` espera con
+ *              `wg.Wait()` antes de imprimir.
+ *
+ * Compilación: go build matrixmultiplywg.go
+ * Ejecución:   ./matrixmultiplywg
+ *              (Alternativamente: go run matrixmultiplywg.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Cuatro bloques (uno por ronda) de 3 líneas; cada línea muestra
+ *              una fila de A, la fila correspondiente de B y la fila del
+ *              resultado.
+ *
+ * Notas:
+ *    1. A diferencia de la barrera, aquí se crean goroutines nuevas en cada
+ *       ronda; el WaitGroup se crea de nuevo en cada iteración.
+ *    2. Se usa `matrixSize = 3` para que la salida sea legible.
+ */
+
 package main
 
 import (

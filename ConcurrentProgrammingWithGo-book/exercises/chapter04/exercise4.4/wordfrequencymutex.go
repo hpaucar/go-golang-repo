@@ -1,3 +1,30 @@
+/*
+ * Archivo:     wordfrequencymutex.go
+ *
+ * Propósito:   Solución del ejercicio 4.4 del libro *Learn Concurrent
+ *              Programming with Go*, que pide eliminar la condición de carrera
+ *              del contador de palabras del ejercicio 3.1 usando un
+ *              `sync.Mutex`. Cada goroutine descarga un RFC (1000 a 1020) y
+ *              actualiza el mapa `frequency` dentro de una sección crítica.
+ *
+ * Compilación: go build wordfrequencymutex.go
+ * Ejecución:   ./wordfrequencymutex
+ *              (Alternativamente: go run wordfrequencymutex.go)
+ *
+ * Entrada:     Ninguna por teclado; descarga los documentos desde
+ *              https://rfc-editor.org (requiere conexión a Internet).
+ * Salida:      "Completed: <url>" por cada RFC y luego cada palabra con su
+ *              frecuencia, ahora sin carreras de datos.
+ *
+ * Notas:
+ *    1. La descarga y el análisis con la expresión regular ocurren fuera del
+ *       mutex; solo la actualización del mapa está en la sección crítica.
+ *    2. `main` sigue esperando con `time.Sleep(10 * time.Second)`; si la red es
+ *       lenta, algunos RFC no se cuentan.
+ *    3. No se verifica el error de `http.Get`: si falla la red, `resp` es `nil`
+ *       y el programa entra en pánico.
+ */
+
 package main
 
 import (

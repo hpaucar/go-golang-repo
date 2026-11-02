@@ -1,3 +1,31 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar la comunicación entre goroutines con canales (channels).
+ *              Dos goroutines envían tres mensajes cada una a su propio canal y
+ *              luego lo cierran; `main` recibe de ambos con `select` hasta que
+ *              los dos canales se cierran.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Seis mensajes intercalados ("Mensaje N desde canal 1" o "...
+ *              canal 2"), los avisos "❌ Canal 1 cerrado" y "❌ Canal 2 cerrado"
+ *              y, al final, "✅ Todos los mensajes han sido recibidos". Tarda
+ *              alrededor de 1,5 segundos.
+ *
+ * Notas:
+ *    1. En un canal sin búfer, el envío se bloquea hasta que otra goroutine
+ *       recibe el valor.
+ *    2. La forma `msg, ok := <-canal` devuelve `ok == false` cuando el canal
+ *       está cerrado y vacío.
+ *    3. Asignar `nil` a un canal cerrado lo desactiva dentro del `select`,
+ *       porque recibir de un canal `nil` bloquea para siempre; así el bucle
+ *       termina cuando ambos canales son `nil`.
+ */
+
 package main
 
 import (

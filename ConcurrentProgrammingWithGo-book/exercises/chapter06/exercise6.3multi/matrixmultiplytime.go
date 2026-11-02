@@ -1,3 +1,29 @@
+/*
+ * Archivo:     matrixmultiplytime.go
+ *
+ * Propósito:   Versión concurrente del ejercicio 6.3 del libro *Learn
+ *              Concurrent Programming with Go*, que pide medir el tiempo de
+ *              multiplicar matrices de 1200x1200 en forma secuencial y
+ *              concurrente. Usa una goroutine por fila coordinada con la
+ *              barrera (`Barrier`) del listado 6.10.
+ *
+ * Compilación: go build matrixmultiplytime.go
+ * Ejecución:   ./matrixmultiplytime
+ *              (Alternativamente: go run matrixmultiplytime.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "Complete in <duración>" con el tiempo total de 4
+ *              multiplicaciones. Compare con `../exercise6.3single`.
+ *
+ * Notas:
+ *    1. Actualmente no compila: importa `.../chapter6/listing6.10`, pero la
+ *       carpeta del repositorio se llama `chapter06`.
+ *    2. Cada ronda usa dos `barrier.Wait()`: el primero inicia el cálculo y el
+ *       segundo espera a que todas las filas terminen.
+ *    3. Las 1200 goroutines de `rowMultiply` nunca terminan; quedan bloqueadas
+ *       en la barrera hasta que `main` sale.
+ */
+
 package main
 
 import (

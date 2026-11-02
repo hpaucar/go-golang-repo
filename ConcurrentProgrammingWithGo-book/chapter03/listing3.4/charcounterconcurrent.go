@@ -1,8 +1,31 @@
 /*
- * Descarga concurrentemente los RFC 1000 al 1030 mediante goroutines y 
- * acumula sus frecuencias de letras en contadores compartidos.
- * Ilustra una carrera de datos al actualizar los contadores sin protección
- * y una espera fija que no garantiza que las tareas terminen.
+ * Archivo:     charcounterconcurrent.go
+ *
+ * Propósito:   Descargar concurrentemente los RFC 1000 a 1030, una goroutine
+ *              por documento, y acumular las frecuencias de letras en un slice
+ *              compartido. Ilustra una carrera de datos al actualizar los
+ *              contadores sin protección y una espera fija de 10 segundos que
+ *              no garantiza que todas las tareas terminen.
+ *
+ * Compilación: go build charcounterconcurrent.go
+ * Ejecución:   ./charcounterconcurrent
+ *              (Alternativamente: go run charcounterconcurrent.go)
+ *
+ * Entrada:     Ninguna por teclado. Requiere conexión a Internet (31 peticiones
+ *              HTTP).
+ * Salida:      Líneas "Completed: <url>" en orden no determinista y, tras 10
+ *              segundos, las frecuencias "a-N ... z-N". Los totales pueden ser
+ *              menores que los de la versión secuencial por las actualizaciones
+ *              perdidas.
+ *
+ * Notas:
+ *    1. `frequency[cIndex] += 1` no es atómico: varias goroutines leen y
+ *       escriben el mismo elemento a la vez. Use `go run -race
+ *       charcounterconcurrent.go` para detectarlo.
+ *    2. Si la conexión es lenta, algunas descargas no terminan antes de los 10
+ *       segundos y sus letras no se cuentan; ajuste el tiempo según su red.
+ *    3. El capítulo 4 corrige la carrera con un mutex y el capítulo 6 reemplaza
+ *       la espera fija por `sync.WaitGroup`.
  */
 
 package main

@@ -1,3 +1,31 @@
+/*
+ * Archivo:     wordstatsearlyquit.go
+ *
+ * Propósito:   Ilustrar la terminación temprana de un pipeline: igual que
+ *              listing9.16_17, pero `listing9_18.Take` deja pasar solo las
+ *              primeras 10 000 palabras y cierra `quitWords`, lo que detiene
+ *              la descarga y la extracción.
+ *
+ * Compilación: go build wordstatsearlyquit.go
+ * Ejecución:   ./wordstatsearlyquit
+ *              (Alternativamente: go run wordstatsearlyquit.go)
+ *
+ * Entrada:     Red: descarga parte de https://rfc-editor.org/rfc/rfc100.txt ...
+ *              rfc130.txt (se detiene tras 10 000 palabras).
+ * Salida:      "Longest Words: ..." y "Most frequent Words: ...", calculados
+ *              solo sobre las primeras 10 000 palabras.
+ *
+ * Notas:
+ *    1. Se usan dos canales de cancelación: `quitWords` para las etapas
+ *       anteriores a `Take` y `quit` para las posteriores, que deben seguir
+ *       vivas para calcular el resultado.
+ *    2. El resultado puede variar entre ejecuciones, porque depende de qué
+ *       páginas llegan primero.
+ *    3. La ruta de importación usa `chapter9/...`, pero la carpeta real es
+ *       `chapter09/`; tal como está, `go build` falla con "no required module
+ *       provides package". Hay que corregir la ruta para compilar.
+ */
+
 package main
 
 import (

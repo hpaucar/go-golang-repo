@@ -1,3 +1,26 @@
+/*
+ * Archivo:     matrixmultiplytime.go
+ *
+ * Propósito:   Versión secuencial del ejercicio 6.3 del libro *Learn Concurrent
+ *              Programming with Go*, que pide medir el tiempo de multiplicar
+ *              matrices de 1200x1200 sin concurrencia, para compararlo con la
+ *              versión con barreras de `../exercise6.3multi`.
+ *
+ * Compilación: go build matrixmultiplytime.go
+ * Ejecución:   ./matrixmultiplytime
+ *              (Alternativamente: go run matrixmultiplytime.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "Complete in <duración>" con el tiempo total de generar y
+ *              multiplicar 4 pares de matrices aleatorias.
+ *
+ * Notas:
+ *    1. Las tres matrices son arreglos fijos de 1200x1200 enteros (unos 11 MB
+ *       cada una) declarados como variables locales.
+ *    2. En una máquina con varios núcleos, la versión concurrente debería ser
+ *       varias veces más rápida.
+ */
+
 package main
 
 import (

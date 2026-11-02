@@ -1,3 +1,27 @@
+/*
+ * Archivo:     waitgrptrywait.go
+ *
+ * Propósito:   Solución del ejercicio 6.2 del libro *Learn Concurrent
+ *              Programming with Go*, que pide agregar `TryWait()` a la
+ *              implementación propia de WaitGroup basada en `sync.Cond`.
+ *              `TryWait` no bloquea: devuelve `true` si el grupo ya llegó a
+ *              cero y `false` en otro caso.
+ *
+ * Compilación: go build waitgrptrywait.go
+ * Ejecución:   ./waitgrptrywait
+ *              (Alternativamente: go run waitgrptrywait.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      "Wait group is not done. Trying again later." una vez por
+ *              segundo durante unos 5 segundos, luego "Marking Wait group as
+ *              done." y "Wait group is done.".
+ *
+ * Notas:
+ *    1. `TryWait` lee `groupSize` dentro del mutex para evitar carreras.
+ *    2. `main` sondea con `TryWait` en un bucle con `time.Sleep`; esto muestra
+ *       la diferencia con `Wait`, que bloquea hasta que el grupo termina.
+ */
+
 package main
 
 import (

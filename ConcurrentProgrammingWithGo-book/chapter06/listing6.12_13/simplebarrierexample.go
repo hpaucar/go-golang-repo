@@ -1,3 +1,29 @@
+/*
+ * Archivo:     simplebarrierexample.go
+ *
+ * Propósito:   Ilustrar una barrera con dos goroutines: "Red" trabaja 4
+ *              segundos y "Blue" 10 segundos por ciclo. Al final de cada ciclo,
+ *              ambas esperan en la barrera, de modo que la más rápida espera a
+ *              la más lenta antes de empezar el siguiente.
+ *
+ * Compilación: go build simplebarrierexample.go
+ * Ejecución:   ./simplebarrierexample
+ *              (Alternativamente: go run simplebarrierexample.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Mensajes con el tiempo transcurrido: "<t> Red is running", "<t>
+ *              Red is waiting on barrier", etc. Los dos colores empiezan cada
+ *              ciclo juntos, cada 10 segundos aproximadamente. El programa dura
+ *              100 segundos.
+ *
+ * Notas:
+ *    1. "Red" pasa unos 6 segundos de cada ciclo bloqueada en la barrera
+ *       esperando a "Blue".
+ *    2. La barrera se reutiliza en cada ciclo porque `Wait()` reinicia el
+ *       contador al liberar a todas.
+ *    3. Las goroutines tienen bucles infinitos; terminan cuando acaba `main`.
+ */
+
 package main
 
 import (

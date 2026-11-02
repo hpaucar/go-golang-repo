@@ -1,3 +1,28 @@
+/*
+ * Archivo:     main.go
+ *
+ * Propósito:   Mostrar los arreglos (arrays) de tamaño fijo: declaración con
+ *              valores cero, asignación por índice, `len`, inicialización con
+ *              valores y tamaño inferido con `[...]`.
+ *
+ * Compilación: go build main.go
+ * Ejecución:   ./main
+ *              (Alternativamente: go run main.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      El arreglo `[0 0 0 0 0]`, luego `[0 0 0 0 100]`, su longitud 5,
+ *              una lista de cinco números y otra de nueve números con su
+ *              longitud.
+ *
+ * Notas:
+ *    1. El tamaño forma parte del tipo: `[5]int` y `[9]int` son tipos
+ *       distintos, y el tamaño no puede cambiar.
+ *    2. Un índice constante fuera de rango, como `arreglo[8]`, es un error de
+ *       compilación; con un índice variable, el error ocurre en ejecución
+ *       (panic).
+ *    3. `[...]` deja que el compilador cuente los elementos.
+ */
+
 package main
 
 import "fmt"

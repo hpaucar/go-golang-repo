@@ -1,3 +1,29 @@
+/*
+ * Archivo:     allfilesinfoselect.go
+ *
+ * Propósito:   Solución del ejercicio 11.2 del libro *Learn Concurrent
+ *              Programming with Go*, que pide evitar el interbloqueo entre dos
+ *              goroutines que se envían trabajo mutuamente por canales. Cada
+ *              una guarda lo pendiente en un slice y usa `select` para recibir
+ *              o enviar, así nunca quedan ambas bloqueadas enviando.
+ *
+ * Compilación: go build allfilesinfoselect.go
+ * Ejecución:   ./allfilesinfoselect ../../commonfiles
+ *              (Alternativamente: go run allfilesinfoselect.go ../../commonfiles)
+ *
+ * Entrada:     Argumento: la ruta del directorio raíz.
+ * Salida:      Por cada directorio, "Reading all files from ..." y "Pushing N
+ *              files ..."; por cada archivo, su nombre, tamaño en KB y fecha de
+ *              modificación. El programa termina a los 60 segundos.
+ *
+ * Notas:
+ *    1. `handleDirectories` envía rutas a `handleFiles` y este devuelve
+ *       subdirectorios: sin el `select`, ambas podrían bloquearse al enviar.
+ *    2. `main` no detecta el final del recorrido; solo espera 60 segundos.
+ *    3. Los archivos abiertos con `os.Open` nunca se cierran, y si `Open`
+ *       falla, `file.Stat()` provoca un pánico.
+ */
+
 package main
 
 import (

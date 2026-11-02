@@ -1,7 +1,30 @@
-// Ejemplo de concurrencia con una variable global compartida.
-//
-// Dos goroutines ejecutan la misma función e intentan incrementar
-// simultáneamente la variable global n.
+/*
+ * Archivo:     concurrente3.go
+ *
+ * Propósito:   Mostrar el problema de la actualización perdida (lost update).
+ *              Dos goroutines ejecutan `proceso`, que lee la variable global
+ *              `n`, espera 10 ms y escribe el valor leído más uno. `main`
+ *              espera 500 ms e imprime `n`.
+ *
+ * Compilación: go build concurrente3.go
+ * Ejecución:   ./concurrente3
+ *              (Alternativamente: go run concurrente3.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Casi siempre "El valor final de n es 1" en lugar del 2 esperado:
+ *              las dos goroutines leen `n == 0` antes de que alguna escriba.
+ *
+ * Notas:
+ *    1. Un incremento no es atómico: se divide en leer `n`, sumar uno al valor
+ *       local y escribir el resultado. La pausa de 10 ms entre la lectura y la
+ *       escritura hace visible el problema.
+ *    2. La lectura y la escritura de `n` forman una sección crítica (critical
+ *       section); se protegen con `sync.Mutex` o se reemplazan por una
+ *       operación atómica de `sync/atomic` (por ejemplo, `atomic.Int64`).
+ *    3. `go run -race concurrente3.go` reporta la condición de carrera, y
+ *       `time.Sleep` no es un mecanismo formal de sincronización.
+ */
+
 package main
 
 import (

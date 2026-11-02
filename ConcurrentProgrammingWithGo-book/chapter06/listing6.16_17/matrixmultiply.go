@@ -1,3 +1,30 @@
+/*
+ * Archivo:     matrixmultiply.go
+ *
+ * Propósito:   Multiplicar matrices de forma concurrente con una barrera: una
+ *              goroutine calcula cada fila del resultado. En cada ronda, `main`
+ *              genera A y B y pasa dos veces por la barrera de tamaño
+ *              `matrixSize + 1`: la primera inicia el cálculo y la segunda
+ *              espera a que todas las filas estén listas.
+ *
+ * Compilación: go build matrixmultiply.go
+ * Ejecución:   ./matrixmultiply
+ *              (Alternativamente: go run matrixmultiply.go)
+ *
+ * Entrada:     Ninguna.
+ * Salida:      Cuatro bloques de tres líneas con una fila de A, una fila de B y
+ *              la fila del resultado, igual que en la versión secuencial.
+ *
+ * Notas:
+ *    1. La primera barrera evita que las goroutines lean las matrices mientras
+ *       `main` las está generando; la segunda evita que `main` imprima un
+ *       resultado incompleto.
+ *    2. La barrera tiene tamaño `matrixSize + 1` porque participan las
+ *       goroutines de las filas y `main`.
+ *    3. Al terminar `main`, las goroutines quedan bloqueadas en la barrera y el
+ *       programa finaliza con ellas.
+ */
+
 package main
 
 import (

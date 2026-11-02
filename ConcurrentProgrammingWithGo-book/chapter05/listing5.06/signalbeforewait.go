@@ -1,35 +1,31 @@
 /*
- * Archivo:     cond_bug_demonstration.go
+ * Archivo:     signalbeforewait.go
  *
- * Propósito:   Demostrar un error de concurrencia clásico al utilizar variables 
- *              de condición: el problema de la "señal perdida" (lost signal). 
- *              El programa pretende lanzar goroutines hijas y esperar a que 
- *              terminen usando sync.Cond, pero falla por un diseño incorrecto.
+ * Propósito:   Demostrar el problema de la señal perdida (lost signal) con
+ *              variables de condición. `main` lanza una goroutine `doWork` y
+ *              espera con `cond.Wait()`, pero `doWork` llama a `cond.Signal()`
+ *              sin adquirir el candado, así que puede avisar antes de que
+ *              `main` esté esperando.
  *
- * Compilación: go build cond_bug_demonstration.go
- * Ejecución:   ./cond_bug_demonstration
- *              (Alternativamente: go run cond_bug_demonstration.go)
+ * Compilación: go build signalbeforewait.go
+ * Ejecución:   ./signalbeforewait
+ *              (Alternativamente: go run signalbeforewait.go)
  *
  * Entrada:     Ninguna.
- * Salida:      El programa imprimirá algunos mensajes de inicio y luego 
- *              entrará en un estado de interbloqueo (deadlock). El runtime 
- *              de Go probablemente detectará esto y arrojará el error:
- *              "fatal error: all goroutines are asleep - deadlock!".
+ * Salida:      Muchas líneas "Work started", "Work finished", "Waiting for
+ *              child goroutine" y "Child goroutine finished"; tarde o temprano
+ *              una señal se pierde y el programa termina con "fatal error: all
+ *              goroutines are asleep - deadlock!".
  *
- * Notas:       
- *    1. El error principal radica en que no se utiliza una variable de estado 
- *       junto con la variable de condición. `sync.Cond` no tiene "memoria"; 
- *       si la goroutine `doWork` ejecuta `cond.Signal()` ANTES de que el hilo 
- *       principal alcance `cond.Wait()`, la señal se pierde para siempre.
- *    2. La regla de oro de las variables de condición es que `Wait()` siempre 
- *       debe estar envuelto en un bucle `for` que verifique una condición 
- *       lógica (ej. `for !workDone { cond.Wait() }`). Aquí, esa comprobación 
- *       brilla por su ausencia.
- *    3. Este código es solo para fines demostrativos de lo que *no* se debe 
- *       hacer. Un `sync.WaitGroup` o canales (channels) serían las herramientas 
- *       idóneas en Go para esperar a que terminen múltiples goroutines.
+ * Notas:
+ *    1. `sync.Cond` no tiene memoria: si `Signal()` ocurre cuando nadie espera
+ *       en `Wait()`, la señal se pierde para siempre.
+ *    2. No hay una variable de estado que `main` pueda comprobar en un bucle
+ *       `for` (por ejemplo, `for !done { cond.Wait() }`).
+ *    3. El código es intencionalmente incorrecto; el listado 5.7 lo corrige.
+ *       Para esperar goroutines, use `sync.WaitGroup` o canales (channels).
  */
- 
+
 package main
 
 import (

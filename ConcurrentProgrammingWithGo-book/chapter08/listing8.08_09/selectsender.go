@@ -1,3 +1,28 @@
+/*
+ * Archivo:     selectsender.go
+ *
+ * Propósito:   Ilustrar `select` con un caso de envío y uno de recepción a la
+ *              vez. `main` envía números aleatorios a un filtro de primos
+ *              (`primesOnly`) y, en el mismo `select`, recibe los primos
+ *              encontrados, hasta juntar 100.
+ *
+ * Compilación: go build selectsender.go
+ * Ejecución:   ./selectsender
+ *              (Alternativamente: go run selectsender.go)
+ *
+ * Entrada:     Ninguna (números aleatorios entre 1 y 1 000 000 000).
+ * Salida:      100 líneas "Found prime: p" con números primos aleatorios.
+ *
+ * Notas:
+ *    1. Un `select` puede mezclar envíos (`numbersChannel <- x`) y
+ *       recepciones (`<-primes`); se ejecuta el que esté listo primero.
+ *    2. Si `main` solo enviara, se bloquearía cuando el filtro espera a que
+ *       alguien lea su resultado (interbloqueo); el `select` evita ese
+ *       problema.
+ *    3. La expresión `rand.Intn(...)` se evalúa en cada vuelta aunque gane el
+ *       caso de recepción; ese número simplemente se descarta.
+ */
+
 package main
 
 import (
