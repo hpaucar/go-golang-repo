@@ -1,0 +1,15 @@
+# docker-compose.yml - un nodo API construido con el Dockerfile multi-stage.
+#   docker compose up -d --build     construir y levantar
+#   docker compose logs -f nodo-api  ver los logs
+#   docker compose down              detener y borrar contenedores y red
+services:
+  nodo-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.multistage
+    container_name: node-api
+    environment:
+      - PORT=9015
+    ports:
+      - "9015:9015"   # HOST:CONTENEDOR
+    restart: unless-stopped

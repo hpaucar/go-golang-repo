@@ -1,0 +1,32 @@
+# Anillo Hot Potato de 3 nodos, cada uno en su propio contenedor.
+# Dentro de la red de Compose, cada servicio se encuentra por su NOMBRE
+# (DNS interno): nodo1 -> nodo2 -> nodo3 -> nodo1.
+#
+#   docker compose up --build        (en esta carpeta; deja los logs a la vista)
+#   go run ../listing11.03/centinela_json.go -modo potato -pasos 5
+#   docker compose down
+#
+# Solo nodo1 publica su puerto al host, para que el centinela pueda entrar.
+x-nodo: &nodo
+  build:
+    context: ..
+    dockerfile: listing11.15/Dockerfile
+  image: sesion11-hotpotato
+  networks: [anillo]
+
+services:
+  nodo1:
+    <<: *nodo
+    command: ["-nombre", "nodo1", "-local", ":9001", "-siguiente", "nodo2:9001"]
+    ports:
+      - "9001:9001"
+  nodo2:
+    <<: *nodo
+    command: ["-nombre", "nodo2", "-local", ":9001", "-siguiente", "nodo3:9001"]
+  nodo3:
+    <<: *nodo
+    command: ["-nombre", "nodo3", "-local", ":9001", "-siguiente", "nodo1:9001"]
+
+networks:
+  anillo:
+    driver: bridge

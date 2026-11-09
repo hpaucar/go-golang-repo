@@ -1,0 +1,17 @@
+# Dockerfile multi-stage: compila en una etapa y ejecuta en otra mínima.
+# Nota: la guía copiaba go.mod y go.sum, pero este ejemplo es un solo archivo
+# sin dependencias externas, así que no hacen falta.
+
+# --- ETAPA 1: compilación ---
+FROM golang:1.24-alpine AS builder
+WORKDIR /src
+COPY codeApi.go .
+# CGO_ENABLED=0 genera un binario estático (no depende de libc)
+RUN CGO_ENABLED=0 GOOS=linux go build -o /api-service codeApi.go
+
+# --- ETAPA 2: ejecución ---
+FROM alpine:3.20
+WORKDIR /app
+COPY --from=builder /api-service .
+EXPOSE 9015
+ENTRYPOINT ["./api-service"]
