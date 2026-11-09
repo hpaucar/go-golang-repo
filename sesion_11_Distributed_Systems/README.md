@@ -7,6 +7,11 @@ nodo es un proceso con su propia memoria, y solo se comunica con los demás
 **enviando mensajes** (aquí, JSON sobre sockets TCP). Dentro de un nodo sí puede
 haber varias goroutines; esas se sincronizan con `sync.Mutex` o con canales.
 
+## Diapositivas
+
+[`Sesion_11_Algoritmos_Distribuidos.pptx`](Sesion_11_Algoritmos_Distribuidos.pptx):
+29 diapositivas 16:9 con código, diagramas y notas del orador.
+
 ## Objetivos
 
 1. Construir nodos que escuchan (`net.Listen`) y envían (`net.Dial`) mensajes
