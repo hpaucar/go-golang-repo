@@ -8,6 +8,29 @@ escuchando.
 
 **Regla: primero los nodos, al final el centinela.**
 
+## Topología: una cadena
+
+```
+centinela ──► 9080 ──► 9081 ──► 9082 ──► 9083
+ (cliente)    (servidor y cliente)       (solo servidor)
+```
+
+| Proceso | Escucha (`net.Listen`) | Envía (`net.Dial`) | Rol |
+|---|---|---|---|
+| centinela | no | a 9080 | solo cliente |
+| 9080, 9081, 9082 | sí | al siguiente nodo (`-remoto`) | servidor y cliente |
+| 9083 | sí | no | solo servidor |
+
+- **Los mensajes van en un solo sentido.** El centinela no escucha, así que
+  ningún nodo puede responderle. Cada nodo solo envía a su `-remoto`. Nada
+  vuelve hacia atrás y el último nodo no se conecta con el primero: no es un
+  anillo (compare con el listado 11.06, papa caliente).
+- **No hay una conexión permanente.** Cada número viaja en una conexión TCP
+  nueva y corta: quien envía la abre (`net.Dial`), escribe una línea
+  (`fmt.Fprintln`) y la cierra. Quien recibe atiende cada conexión con
+  `Accept` en su propia goroutine (`go handle(conn)`). La cadena es la
+  estructura lógica; las conexiones TCP duran solo un mensaje.
+
 ## Paso 0: abrir 5 terminales
 
 Cada programa es un **proceso** distinto, con su propia memoria. Esa es la idea

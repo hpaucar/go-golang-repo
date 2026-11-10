@@ -38,7 +38,7 @@ archivo explica sus cambios en la sección `Notas` de su cabecera.
 |---|---|---|---|
 | 11.01 | `centinela.go` ([guía paso a paso](listing11.01/README.md)) | Centinela en texto plano | → 9080 |
 | 11.02 | `ordenamiento.go` | Ordenamiento distribuido en cadena (versión de clase) | 9080–9083 |
-| 11.03 | `centinela_json.go` | Centinela JSON con `-modo conway\|potato\|pipeline\|fanout` | → 9001 |
+| 11.03 | `centinela_json.go` ([guía paso a paso](listing11.03/README.md)) | Centinela JSON con `-modo conway\|potato\|pipeline\|fanout` | → 9001 |
 | 11.04 | `conway_compressor.go` | Conway, nodo 1: compresión RLE | 9001 |
 | 11.05 | `conway_output.go` | Conway, nodo 2: salida en líneas de ancho K | 9002 |
 | 11.06 | `hot_potato_node.go` | Papa caliente en anillo (token ring) | 9001–9003 |
