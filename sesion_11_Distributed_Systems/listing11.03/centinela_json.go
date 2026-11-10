@@ -7,11 +7,57 @@
  *              que escucha en el mismo puerto 9001.
  *
  * Compilación: go build centinela_json.go
- * Ejecución:   go run centinela_json.go -modo conway
- *              go run centinela_json.go -modo potato -pasos 5
- *              go run centinela_json.go -modo pipeline
- *              go run centinela_json.go -modo fanout
- *              (opcional: -destino host:puerto, por defecto localhost:9001)
+ * Ejecución:   El centinela es el ÚLTIMO paso. Cada orden va en su propia
+ *              terminal, desde sesion_11_Distributed_Systems. Los nodos se
+ *              dejan corriendo: tras su primera línea esperan mensajes.
+ *              Un modo por vez (todos usan el puerto 9001); Ctrl+C en todos
+ *              los nodos antes de cambiar de modo.
+ *
+ *              Modo conway (3 terminales):
+ *                # Terminal 1: nodo de salida (9002). Déjelo corriendo.
+ *                go run listing11.05/conway_output.go
+ *                # Terminal 2: compresor (9001). Déjelo corriendo.
+ *                go run listing11.04/conway_compressor.go
+ *                # Terminal 3: espere a que la terminal 2 muestre
+ *                # "Escuchando en localhost:9001", luego:
+ *                go run listing11.03/centinela_json.go -modo conway
+ *                (resultado en la terminal 1)
+ *
+ *              Modo potato (4 terminales):
+ *                # Terminales 1 a 3: nodos del anillo. Déjelos corriendo.
+ *                go run listing11.06/hot_potato_node.go -local localhost:9001 -siguiente localhost:9002
+ *                go run listing11.06/hot_potato_node.go -local localhost:9002 -siguiente localhost:9003
+ *                go run listing11.06/hot_potato_node.go -local localhost:9003 -siguiente localhost:9001
+ *                # Terminal 4: espere a que las terminales 1 a 3 muestren
+ *                # "Escuchando en ...", luego:
+ *                go run listing11.03/centinela_json.go -modo potato -pasos 5
+ *
+ *              Modo pipeline (6 terminales, del último nodo al primero):
+ *                # Terminales 1 a 5: nodos 9005..9001. Déjelos corriendo.
+ *                go run listing11.07/pipeline_sort_node.go -local localhost:9005
+ *                go run listing11.07/pipeline_sort_node.go -local localhost:9004 -siguiente localhost:9005
+ *                go run listing11.07/pipeline_sort_node.go -local localhost:9003 -siguiente localhost:9004
+ *                go run listing11.07/pipeline_sort_node.go -local localhost:9002 -siguiente localhost:9003
+ *                go run listing11.07/pipeline_sort_node.go -local localhost:9001 -siguiente localhost:9002
+ *                # Terminal 6: espere a que las terminales 1 a 5 muestren
+ *                # "Listo. Siguiente: ...", luego:
+ *                go run listing11.03/centinela_json.go -modo pipeline
+ *
+ *              Modo fanout (5 terminales, de atrás hacia adelante):
+ *                # Terminal 1: agregador fan-in (9010). Déjelo corriendo.
+ *                go run listing11.10/fanin_aggregator.go -esperados 10
+ *                # Terminales 2 y 3: workers (9002, 9003). Déjelos corriendo.
+ *                go run listing11.09/fanout_worker.go -puerto 9002 -nombre Worker-1
+ *                go run listing11.09/fanout_worker.go -puerto 9003 -nombre Worker-2
+ *                # Terminal 4: master fan-out (9001). Déjelo corriendo.
+ *                go run listing11.08/fanout_master.go
+ *                # Terminal 5: espere a que las terminales 1 a 4 muestren
+ *                # su primera línea, luego:
+ *                go run listing11.03/centinela_json.go -modo fanout
+ *                (total final en la terminal 1)
+ *
+ *              Opcional: -destino host:puerto (por defecto localhost:9001).
+ *              Guía paso a paso: listing11.03/README.md
  *
  * Entrada:     Ninguna.
  * Salida:      Una línea "[CENTINELA SENT] ..." por mensaje enviado.

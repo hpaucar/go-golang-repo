@@ -63,7 +63,14 @@ Todas las órdenes de esta guía se ejecutan desde la carpeta de la sesión
 cd sesion_11_Distributed_Systems
 ```
 
-Cada nodo va en su propia terminal. El centinela va siempre en la última.
+**El centinela es el último paso.** Cada nodo va en su propia terminal y se
+deja corriendo: después de su primera línea parece "detenido", pero en
+realidad está esperando mensajes. No presione `Ctrl+C` hasta terminar la
+prueba. El centinela va siempre en la última terminal y solo se ejecuta
+cuando los nodos ya muestran su mensaje de inicio.
+
+El resultado aparece en las terminales de los **nodos**, no en la del
+centinela. El centinela solo imprime `[CENTINELA SENT] ...`.
 
 ---
 
@@ -76,13 +83,21 @@ centinela ──► compresor (9001) ──► salida (9002)
                RLE                 líneas de K caracteres
 ```
 
+Ejecute cada orden en su propia terminal, desde `sesion_11_Distributed_Systems`:
+
 ```bash
-go run listing11.05/conway_output.go              # terminal 1 (salida, 9002)
-go run listing11.04/conway_compressor.go          # terminal 2 (compresor, 9001)
-go run listing11.03/centinela_json.go -modo conway   # terminal 3
+# Terminal 1: nodo de salida (9002). Déjelo corriendo.
+go run listing11.05/conway_output.go
+
+# Terminal 2: compresor (9001). Déjelo corriendo.
+go run listing11.04/conway_compressor.go
+
+# Terminal 3: espere a que la terminal 2 muestre "Escuchando en localhost:9001", luego:
+go run listing11.03/centinela_json.go -modo conway
 ```
 
-Se levanta primero la salida porque el compresor le envía su resultado.
+Se levanta primero la salida porque el compresor le envía su resultado. El
+resultado aparece en la **terminal 1**.
 
 **Qué ocurre:** el compresor recibe `AAAAABBBCCDAAAAA`, lo comprime con RLE
 (cinco A, tres B, dos C, una D, cinco A) y envía `5A3B2C1D5A` al nodo de
@@ -118,12 +133,24 @@ centinela ──► 9001 ──► 9002 ──► 9003
                └──────────────────┘
 ```
 
+Ejecute cada orden en su propia terminal, desde `sesion_11_Distributed_Systems`:
+
 ```bash
-go run listing11.06/hot_potato_node.go -local localhost:9001 -siguiente localhost:9002   # terminal 1
-go run listing11.06/hot_potato_node.go -local localhost:9002 -siguiente localhost:9003   # terminal 2
-go run listing11.06/hot_potato_node.go -local localhost:9003 -siguiente localhost:9001   # terminal 3
-go run listing11.03/centinela_json.go -modo potato -pasos 5                              # terminal 4
+# Terminal 1: nodo 9001, envía a 9002. Déjelo corriendo.
+go run listing11.06/hot_potato_node.go -local localhost:9001 -siguiente localhost:9002
+
+# Terminal 2: nodo 9002, envía a 9003. Déjelo corriendo.
+go run listing11.06/hot_potato_node.go -local localhost:9002 -siguiente localhost:9003
+
+# Terminal 3: nodo 9003, envía a 9001 (cierra el anillo). Déjelo corriendo.
+go run listing11.06/hot_potato_node.go -local localhost:9003 -siguiente localhost:9001
+
+# Terminal 4: espere a que las terminales 1 a 3 muestren "Escuchando en ...", luego:
+go run listing11.03/centinela_json.go -modo potato -pasos 5
 ```
+
+El token pasa por las terminales 1, 2 y 3. El nodo que pierde lo anuncia en
+su propia terminal.
 
 **Qué ocurre:** cada nodo recibe el token, resta 1 a `pasos` y lo pasa al
 siguiente. Pierde el nodo que recibe el token con `pasos = 0`. Cada nodo
@@ -160,14 +187,30 @@ hace perder a 9001? ¿Y a 9002?
 centinela ──► 9001 ──► 9002 ──► 9003 ──► 9004 ──► 9005
 ```
 
+Ejecute cada orden en su propia terminal, desde `sesion_11_Distributed_Systems`.
+Se levantan del último al primero:
+
 ```bash
-go run listing11.07/pipeline_sort_node.go -local localhost:9005                             # terminal 1 (último)
-go run listing11.07/pipeline_sort_node.go -local localhost:9004 -siguiente localhost:9005   # terminal 2
-go run listing11.07/pipeline_sort_node.go -local localhost:9003 -siguiente localhost:9004   # terminal 3
-go run listing11.07/pipeline_sort_node.go -local localhost:9002 -siguiente localhost:9003   # terminal 4
-go run listing11.07/pipeline_sort_node.go -local localhost:9001 -siguiente localhost:9002   # terminal 5
-go run listing11.03/centinela_json.go -modo pipeline                                        # terminal 6
+# Terminal 1: nodo 9005, el último (sin -siguiente). Déjelo corriendo.
+go run listing11.07/pipeline_sort_node.go -local localhost:9005
+
+# Terminal 2: nodo 9004, envía a 9005. Déjelo corriendo.
+go run listing11.07/pipeline_sort_node.go -local localhost:9004 -siguiente localhost:9005
+
+# Terminal 3: nodo 9003, envía a 9004. Déjelo corriendo.
+go run listing11.07/pipeline_sort_node.go -local localhost:9003 -siguiente localhost:9004
+
+# Terminal 4: nodo 9002, envía a 9003. Déjelo corriendo.
+go run listing11.07/pipeline_sort_node.go -local localhost:9002 -siguiente localhost:9003
+
+# Terminal 5: nodo 9001, el de entrada, envía a 9002. Déjelo corriendo.
+go run listing11.07/pipeline_sort_node.go -local localhost:9001 -siguiente localhost:9002
+
+# Terminal 6: espere a que las terminales 1 a 5 muestren "Listo. Siguiente: ...", luego:
+go run listing11.03/centinela_json.go -modo pipeline
 ```
+
+Cada nodo imprime su `RESULTADO` en su propia terminal (1 a 5).
 
 **Qué ocurre:** la misma regla que en el listado 11.01: cada nodo guarda el
 menor valor visto y expulsa el mayor al siguiente. Hay dos diferencias
@@ -210,15 +253,28 @@ centinela ──► master (9001)                      ├──► agregador fa
                          └──► Worker-2 (9003) ──┘
 ```
 
+Ejecute cada orden en su propia terminal, desde `sesion_11_Distributed_Systems`.
 Se levantan **de atrás hacia adelante**: primero quien recibe los resultados.
 
 ```bash
-go run listing11.10/fanin_aggregator.go -esperados 10                    # terminal 1 (9010)
-go run listing11.09/fanout_worker.go -puerto 9002 -nombre Worker-1       # terminal 2
-go run listing11.09/fanout_worker.go -puerto 9003 -nombre Worker-2       # terminal 3
-go run listing11.08/fanout_master.go                                     # terminal 4 (9001)
-go run listing11.03/centinela_json.go -modo fanout                       # terminal 5
+# Terminal 1: agregador fan-in (9010). Déjelo corriendo.
+go run listing11.10/fanin_aggregator.go -esperados 10
+
+# Terminal 2: Worker-1 (9002). Déjelo corriendo.
+go run listing11.09/fanout_worker.go -puerto 9002 -nombre Worker-1
+
+# Terminal 3: Worker-2 (9003). Déjelo corriendo.
+go run listing11.09/fanout_worker.go -puerto 9003 -nombre Worker-2
+
+# Terminal 4: master fan-out (9001). Déjelo corriendo.
+go run listing11.08/fanout_master.go
+
+# Terminal 5: espere a que las terminales 1 a 4 muestren su primera línea
+# ("Escuchando resultados...", "Activo en el puerto...", "Escuchando en localhost:9001..."), luego:
+go run listing11.03/centinela_json.go -modo fanout
 ```
+
+El total final aparece en la **terminal 1**.
 
 **Qué ocurre:**
 
