@@ -17,7 +17,7 @@
  *
  * Entrada:     Números enteros, uno por conexión TCP.
  * Salida:      "Número recibido = X" por cada número y, al completar `n`,
- *              "[NODO p] valor final = X". Con 9, 12, 10, 2 se obtiene
+ *              "[NODO p] valor que se queda = X". Con 9, 12, 10, 2 se obtiene
  *              2, 9, 10, 12 en los nodos 9080..9083.
  *
  * Notas:
@@ -75,8 +75,8 @@ func main() {
 		os.Exit(1)
 	}
 	defer ls.Close()
-	fmt.Printf("[NODO %s] escuchando; siguiente = %q; espera %d valores\n",
-		*portLocal, dirRemoto, num)
+	fmt.Printf("[NODO %s] escuchando; espera %d valores; siguiente = %q.\n",
+		*portLocal, num, dirRemoto)
 
 	for {
 		conn, err := ls.Accept()
@@ -110,7 +110,7 @@ func handle(conn net.Conn) {
 
 	cont++
 	if cont == num {
-		fmt.Printf("[NODO %s] valor final = %d\n", dirLocal, min)
+		fmt.Printf("[NODO %s] valor que se queda = %d\n", dirLocal, min)
 		cont = 0
 	}
 

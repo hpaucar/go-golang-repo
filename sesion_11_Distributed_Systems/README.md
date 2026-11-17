@@ -32,20 +32,20 @@ archivo explica sus cambios en la sección `Notas` de su cabecera.
 | Listado | Archivo | Tema | Puertos |
 |---|---|---|---|
 | 11.01 | `centinela.go` ([guía paso a paso](listing11.01/README.md)) | Centinela en texto plano | → 9080 |
-| 11.02 | `ordenamiento.go` | Ordenamiento distribuido en cadena (versión de clase) | 9080–9083 |
+| 11.02 | `ordenamiento.go` ([guía paso a paso](listing11.02/README.md)) | Ordenamiento distribuido en cadena (versión de clase) | 9080–9083 |
 | 11.03 | `centinela_json.go` ([guía paso a paso](listing11.03/README.md)) | Centinela JSON con `-modo conway\|potato\|pipeline\|fanout` | → 9001 |
 | 11.04 | `conway_compressor.go` ([guía paso a paso](listing11.04/README.md)) | Conway, nodo 1: compresión RLE | 9001 |
-| 11.05 | `conway_output.go` | Conway, nodo 2: salida en líneas de ancho K | 9002 |
-| 11.06 | `hot_potato_node.go` | Papa caliente en anillo (token ring) | 9001–9003 |
-| 11.07 | `pipeline_sort_node.go` | Ordenamiento en pipeline con mensaje FIN | 9001–9005 |
-| 11.08 | `fanout_master.go` | Fan-out: reparte bloques de tareas | 9001 |
-| 11.09 | `fanout_worker.go` | Worker (eleva al cuadrado) | 9002, 9003 |
-| 11.10 | `fanin_aggregator.go` | Fan-in: suma los resultados | 9010 |
-| 11.11 | `recurso_compartido.go` | "Observador" que detecta violaciones de exclusión mutua | 9100 |
-| 11.12 | `ricart_agrawala.go` | Ricart-Agrawala con permisos (Ben-Ari, Alg. 10.2) | 9101–9103 |
-| 11.13 | `ra_token.go` | Ricart-Agrawala con token (Ben-Ari, Alg. 10.3) | 9101–9103 |
-| 11.14 | `codeApi.go`, `Dockerfile`, `Dockerfile.multistage`, `docker-compose.yml` | API REST en contenedor | 9015 |
-| 11.15 | `Dockerfile`, `docker-compose.yml` | Anillo de papa caliente: un contenedor por nodo | 9001 |
+| 11.05 | `conway_output.go` ([guía paso a paso](listing11.05/README.md)) | Conway, nodo 2: salida en líneas de ancho K | 9002 |
+| 11.06 | `hot_potato_node.go` ([guía paso a paso](listing11.06/README.md)) | Papa caliente en anillo (token ring) | 9001–9003 |
+| 11.07 | `pipeline_sort_node.go` ([guía paso a paso](listing11.07/README.md)) | Ordenamiento en pipeline con mensaje FIN | 9001–9005 |
+| 11.08 | `fanout_master.go` ([guía paso a paso](listing11.08/README.md)) | Fan-out: reparte bloques de tareas | 9001 |
+| 11.09 | `fanout_worker.go` ([guía paso a paso](listing11.09/README.md)) | Worker (eleva al cuadrado) | 9002, 9003 |
+| 11.10 | `fanin_aggregator.go` ([guía paso a paso](listing11.10/README.md)) | Fan-in: suma los resultados | 9010 |
+| 11.11 | `recurso_compartido.go` ([guía paso a paso](listing11.11/README.md)) | "Observador" que detecta violaciones de exclusión mutua | 9100 |
+| 11.12 | `ricart_agrawala.go` ([guía paso a paso](listing11.12/README.md)) | Ricart-Agrawala con permisos (Ben-Ari, Alg. 10.2) | 9101–9103 |
+| 11.13 | `ra_token.go` ([guía paso a paso](listing11.13/README.md)) | Ricart-Agrawala con token (Ben-Ari, Alg. 10.3) | 9101–9103 |
+| 11.14 | `codeApi.go`, `Dockerfile`, `Dockerfile.multistage`, `docker-compose.yml` ([guía paso a paso](listing11.14/README.md)) | API REST en contenedor | 9015 |
+| 11.15 | `Dockerfile`, `docker-compose.yml` ([guía paso a paso](listing11.15/README.md)) | Anillo de papa caliente: un contenedor por nodo | 9001 |
 
 ## Cómo ejecutar
 

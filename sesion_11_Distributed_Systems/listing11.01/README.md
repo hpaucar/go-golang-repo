@@ -66,7 +66,7 @@ go run ordenamiento.go -local 9080 -remoto 9081 -n 4    # terminal 1
 Cada nodo muestra una línea como:
 
 ```
-[NODO 9080] escuchando; siguiente = "localhost:9081"; espera 4 valores
+[NODO 9080] escuchando; espera 4 valores; siguiente = "localhost:9081".
 ```
 
 ## Paso 5: ejecutar el centinela
@@ -96,10 +96,10 @@ recibe.
 Salida final esperada:
 
 ```
-[NODO localhost:9080] valor final = 2
-[NODO localhost:9081] valor final = 9
-[NODO localhost:9082] valor final = 10
-[NODO localhost:9083] valor final = 12
+[NODO localhost:9080] valor que se queda = 2
+[NODO localhost:9081] valor que se queda = 9
+[NODO localhost:9082] valor que se queda = 10
+[NODO localhost:9083] valor que se queda = 12
 ```
 
 Nota: en los nodos 9081 y 9082 el orden de llegada (12, 10, 9) no es el orden
@@ -118,7 +118,7 @@ Los nodos siguen escuchando después de imprimir su resultado. Presione
   que el nodo 9080.
 - **`address already in use`**: un nodo de una ejecución anterior sigue
   activo. Deténgalo con `Ctrl+C` o con `pkill -f ordenamiento`.
-- **Un nodo nunca imprime `valor final`**: su `-n` es demasiado alto y espera
+- **Un nodo nunca imprime `valor que se queda`**: su `-n` es demasiado alto y espera
   números que nunca llegan.
 - **Se cambian los números del centinela**: hay que ajustar también la
   cantidad de nodos y los valores de `-n` (con *m* números se necesitan *m*
