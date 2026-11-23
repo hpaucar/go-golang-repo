@@ -1,0 +1,9 @@
+# Imagen del centinela (listing14.06). Mismo contexto que el Dockerfile de los nodos.
+FROM golang:1.26-alpine AS builder
+WORKDIR /src
+COPY listing14.06/centinela_consenso.go .
+RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /centinela_cli centinela_consenso.go
+
+FROM alpine:3.21
+COPY --from=builder /centinela_cli /usr/local/bin/centinela_cli
+ENTRYPOINT ["centinela_cli"]

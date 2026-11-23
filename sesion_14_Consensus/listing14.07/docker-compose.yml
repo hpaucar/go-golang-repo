@@ -1,0 +1,52 @@
+# Clúster de consenso de 5 nodos en malla completa, un contenedor por nodo.
+# Dentro de la red de Compose, cada servicio se encuentra por su NOMBRE (DNS
+# interno): todos escuchan en el puerto 8000.
+#
+#   docker compose up --build -d                    (en esta carpeta)
+#   docker compose logs -f                          (terminal 1)
+#   docker compose --profile test run --rm centinela  (terminal 2)
+#   docker compose --profile test down
+#
+# Votos de prueba: A, B, A, A, B -> resultado esperado en los 5 nodos: GO A.
+x-nodo: &nodo
+  build:
+    context: ..
+    dockerfile: listing14.07/Dockerfile
+  image: sesion14-consenso
+  networks: [red_consenso_mesh]
+  environment:
+    PEERS: nodo1:8000,nodo2:8000,nodo3:8000,nodo4:8000,nodo5:8000
+    NODE_PORT: "8000"
+    DELAY_MS: "300"
+
+services:
+  nodo1:
+    <<: *nodo
+    command: ["-name=nodo1", "-vote=1"]
+  nodo2:
+    <<: *nodo
+    command: ["-name=nodo2", "-vote=2"]
+  nodo3:
+    <<: *nodo
+    command: ["-name=nodo3", "-vote=1"]
+  nodo4:
+    <<: *nodo
+    command: ["-name=nodo4", "-vote=1"]
+  nodo5:
+    <<: *nodo
+    command: ["-name=nodo5", "-vote=2"]
+
+  # Solo se levanta con --profile test (no arranca con "docker compose up").
+  centinela:
+    build:
+      context: ..
+      dockerfile: listing14.07/Dockerfile.centinela
+    image: sesion14-centinela
+    profiles: [test]
+    command: ["-nodes=nodo1:8000,nodo2:8000,nodo3:8000,nodo4:8000,nodo5:8000"]
+    depends_on: [nodo1, nodo2, nodo3, nodo4, nodo5]
+    networks: [red_consenso_mesh]
+
+networks:
+  red_consenso_mesh:
+    driver: bridge
